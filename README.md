@@ -1,6 +1,6 @@
 # Bag Customizer for ElvUI
 
-Make your ElvUI bags look like classic WoW bags - or create your own awesome custom designs!
+Make your ElvUI bags look like the default WoW bags - or create your own awesome custom designs!
 
 ## About
 This addon lets you transform the appearance of ElvUI bags to look more like the default WoW bags or create completely custom themes with your own style.
@@ -55,7 +55,7 @@ Each texture type has specific folder locations and recommended dimensions - che
 - ElvUI
 
 ## Need Help?
-If you have questions or run into issues, post in the Curseforge comments. For bug reports, please enable the relevant debugging option in the Debug tab first to provide helpful logs!
+If you have questions or run into issues, post in the Curseforge comments. For bug reports, please enable the relevant debugging option in the Debug tab first and provide relevant logs.
 
 ## Disclaimer
 This addon contains modified UI textures from World of Warcraft (owned by Blizzard Entertainment) and ElvUI. These assets are used with the purpose of creating visual consistency with the original interfaces and remain the intellectual property of their respective owners. This addon is not affiliated with or endorsed by Blizzard Entertainment or the ElvUI team.

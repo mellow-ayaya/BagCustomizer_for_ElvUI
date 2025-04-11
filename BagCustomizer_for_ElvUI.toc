@@ -1,0 +1,35 @@
+## Interface: 110100, 110105
+## Title: Bag Customizer for |cff1784d1ElvUI|r
+## IconTexture: Interface\AddOns\BagCustomizer_for_ElvUI\Media\icon.tga
+## Notes: Customizes the appearance of ElvUI bags
+## Author: Mellow_ayaya
+## Version: 1.0.0
+## RequiredDeps: ElvUI
+## DefaultState: enabled
+## SavedVariables: BagCustomizer_for_ElvUIDB
+## X-License: GNU General Public License version 3 (GPLv3)
+## X-Curse-Project-ID: <TBD>
+## X-WoWI-ID: <TBD>
+
+# Core System Files
+Core\Core.lua
+Core\Settings.lua
+Core\ResourceManager.lua
+Core\UpdateSystem.lua
+
+# Utility functions
+Utilities\ThemeManager.lua
+Utilities\ImportExportDialog.lua
+
+# UI Element customization
+Modules\InventoryBackgroundAdjust.lua
+Modules\MainTextures.lua
+Modules\CurrencyAndTextures.lua
+Modules\MiscBorders.lua
+Modules\SearchBar.lua
+Modules\BindText.lua
+Modules\InventorySlots.lua
+Modules\FrameHeight.lua
+
+# Configuration
+Options.lua

@@ -260,7 +260,7 @@ addon.defaults = {
 
 	uiBackground = {
 		enable = false,
-		texture = "",
+		texture = "ui_custom1.tga",
 		alpha = 1,
 		scale = 1,
 		point = "CENTER",
@@ -270,7 +270,7 @@ addon.defaults = {
 
 	artBackground = {
 		enable = false,
-		texture = "",
+		texture = "art_northrend.tga",
 		alpha = 1,
 		scale = 1,
 		point = "CENTER",

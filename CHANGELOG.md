@@ -1,5 +1,10 @@
+## 1.0.5 - 2025-04-11
+Fixed module loading order.
+Added better ElvUI Profile switch handling.
+
 ## 1.0.4 - 2025-04-11
 Added /bcfe command that opens the addon's settings
+Updated Readme to highlight the new command
 
 ## 1.0.3 - 2025-04-11
 Fixed close button texture sometimes disappearing when loading themes

@@ -3,13 +3,12 @@
 ## IconTexture: Interface\AddOns\BagCustomizer_for_ElvUI\Media\icon.tga
 ## Notes: Customizes the appearance of ElvUI bags
 ## Author: mellow_ayaya
-## Version: 1.0.0
+## Version: 1.0.1
 ## RequiredDeps: ElvUI
 ## DefaultState: enabled
 ## SavedVariables: BagCustomizer_for_ElvUIDB
 ## X-License: GNU General Public License version 3 (GPLv3)
-## X-Curse-Project-ID: <TBD>
-## X-WoWI-ID: <TBD>
+## X-Curse-Project-ID: 1240254
 
 # Core System Files
 Core\Core.lua

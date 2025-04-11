@@ -26,7 +26,7 @@ This addon lets you transform the appearance of ElvUI bags to look more like the
 
 ## Getting Started
 1. **Try the Default Theme**: It should already be applied to your bags automatically
-2. **Explore More Themes**: Check out the "Themes and Profiles" tab for more pre-made designs
+2. **Explore More Themes**: Type /bcfe in chat and check out the "Themes and Profiles" tab for more pre-made designs
 3. **Customize Everything**: Use the "Advanced" tab to fine-tune specific elements
 4. **Save Your Creations**: Once you're happy with your settings, save them as a theme
 

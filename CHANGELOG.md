@@ -1,4 +1,4 @@
-## 1.0.5 - 2025-04-11
+## 1.0.5 - 2025-04-12
 Fixed module loading order.
 Added better ElvUI Profile switch handling.
 

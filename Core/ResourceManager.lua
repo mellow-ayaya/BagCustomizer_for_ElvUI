@@ -640,7 +640,7 @@ addon.defaultSlotTextures = {
 	Empty = "Interface\\AddOns\\BagCustomizer_for_ElvUI\\Media\\Buttons\\empty.tga",
 	Normal = "Interface\\AddOns\\BagCustomizer_for_ElvUI\\Media\\Buttons\\empty.tga",
 	Highlight = "Interface\\AddOns\\BagCustomizer_for_ElvUI\\Media\\Buttons\\highlight.tga",
-	ScaleFactor = 100,
+	ScaleFactor = 104,
 }
 addon.maskShapeToFileMap = {
 	["Soft Circular"] = "alpha_fade_soft_circular.tga",

@@ -1,3 +1,8 @@
+## 1.0.1 - 2025-04-11
+Fixed a few issues with importing/resetting themes not applying all Inventory Slots settings
+Reorganized debug settings
+Updated default Themes
+
 ## 1.0.0 - 2025-04-11
 Initial Release
 

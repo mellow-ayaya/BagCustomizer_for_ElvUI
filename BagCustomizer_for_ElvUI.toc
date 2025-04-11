@@ -3,7 +3,7 @@
 ## IconTexture: Interface\AddOns\BagCustomizer_for_ElvUI\Media\icon.tga
 ## Notes: Customizes the appearance of ElvUI bags
 ## Author: mellow_ayaya
-## Version: 1.0.4
+## Version: 1.0.5
 ## RequiredDeps: ElvUI
 ## DefaultState: enabled
 ## SavedVariables: BagCustomizer_for_ElvUIDB
@@ -21,14 +21,14 @@ Utilities\ThemeManager.lua
 Utilities\ImportExportDialog.lua
 
 # UI Element customization
+Modules\FrameHeight.lua
 Modules\InventoryBackgroundAdjust.lua
 Modules\MainTextures.lua
 Modules\CurrencyAndTextures.lua
-Modules\MiscBorders.lua
 Modules\SearchBar.lua
-Modules\BindText.lua
 Modules\InventorySlots.lua
-Modules\FrameHeight.lua
+Modules\BindText.lua
+Modules\MiscBorders.lua
 
 # Configuration
 Options.lua

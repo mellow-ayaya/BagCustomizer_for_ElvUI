@@ -1,3 +1,6 @@
+## 1.0.4 - 2025-04-11
+Added /bcfe command that opens the addon's settings
+
 ## 1.0.3 - 2025-04-11
 Fixed close button texture sometimes disappearing when loading themes
 

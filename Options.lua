@@ -71,11 +71,6 @@ local function CreateDebugOptions()
 				type = "header",
 				name = "Debug Settings",
 			},
-			description = {
-				order = 2,
-				type = "description",
-				name = "Configure debugging for BagCustomizer modules. Debug messages appear in the chat window.",
-			},
 			masterToggle = {
 				order = 3,
 				type = "toggle",
@@ -93,15 +88,11 @@ local function CreateDebugOptions()
 					end
 				end,
 			},
-			moduleHeader = {
+
+			coreHeader = {
 				order = 10,
 				type = "header",
-				name = "Module Debug Settings",
-			},
-			moduleDesc = {
-				order = 11,
-				type = "description",
-				name = "Enable or disable debugging for specific modules:",
+				name = "Core Debug Settings",
 			},
 
 			-- Core module debug toggle
@@ -109,7 +100,7 @@ local function CreateDebugOptions()
 				order = 20,
 				type = "toggle",
 				name = "Core",
-				width = 1.2,
+				width = 1,
 				get = function()
 					if E.db.bagCustomizer.core == nil then
 						E.db.bagCustomizer.core = {}
@@ -133,41 +124,12 @@ local function CreateDebugOptions()
 				end,
 			},
 
-			-- Settings module debug toggle
-			settingsModule = {
-				order = 21,
-				type = "toggle",
-				name = "Settings",
-				width = 1.2,
-				get = function()
-					if E.db.bagCustomizer.settings == nil then
-						E.db.bagCustomizer.settings = {}
-					end
-
-					if E.db.bagCustomizer.settings.debug == nil then
-						E.db.bagCustomizer.settings.debug = true
-					end
-
-					return E.db.bagCustomizer.settings.debug
-				end,
-				set = function(_, value)
-					if E.db.bagCustomizer.settings == nil then
-						E.db.bagCustomizer.settings = {}
-					end
-
-					E.db.bagCustomizer.settings.debug = value
-					if value and not E.db.bagCustomizer.debug then
-						print("|cFFFFFF00Note:|r Master debug toggle is OFF. Enable it to see debug messages.")
-					end
-				end,
-			},
-
 			-- ResourceManager module debug toggle
 			resourceManagerModule = {
-				order = 22,
+				order = 21,
 				type = "toggle",
 				name = "Resource Manager",
-				width = 1.2,
+				width = 1,
 				get = function()
 					if E.db.bagCustomizer.resourceManager == nil then
 						E.db.bagCustomizer.resourceManager = {}
@@ -191,12 +153,41 @@ local function CreateDebugOptions()
 				end,
 			},
 
+			-- Settings module debug toggle
+			settingsModule = {
+				order = 22,
+				type = "toggle",
+				name = "Settings",
+				width = 1,
+				get = function()
+					if E.db.bagCustomizer.settings == nil then
+						E.db.bagCustomizer.settings = {}
+					end
+
+					if E.db.bagCustomizer.settings.debug == nil then
+						E.db.bagCustomizer.settings.debug = true
+					end
+
+					return E.db.bagCustomizer.settings.debug
+				end,
+				set = function(_, value)
+					if E.db.bagCustomizer.settings == nil then
+						E.db.bagCustomizer.settings = {}
+					end
+
+					E.db.bagCustomizer.settings.debug = value
+					if value and not E.db.bagCustomizer.debug then
+						print("|cFFFFFF00Note:|r Master debug toggle is OFF. Enable it to see debug messages.")
+					end
+				end,
+			},
+
 			-- UpdateSystem module debug toggle
 			updateSystemModule = {
 				order = 23,
 				type = "toggle",
 				name = "Update System",
-				width = 1.2,
+				width = 1,
 				get = function()
 					if E.db.bagCustomizer.updateSystem == nil then
 						E.db.bagCustomizer.updateSystem = {}
@@ -220,12 +211,106 @@ local function CreateDebugOptions()
 				end,
 			},
 
+
+			moduleHeader = {
+				order = 30,
+				type = "header",
+				name = "Module Debug Settings",
+			},
+
+			-- BindText module debug toggle
+			bindTextModule = {
+				order = 31,
+				type = "toggle",
+				name = "Bind Text",
+				width = 1,
+				get = function()
+					if E.db.bagCustomizer.bindText == nil then
+						E.db.bagCustomizer.bindText = {}
+					end
+
+					if E.db.bagCustomizer.bindText.debug == nil then
+						E.db.bagCustomizer.bindText.debug = true
+					end
+
+					return E.db.bagCustomizer.bindText.debug
+				end,
+				set = function(_, value)
+					if E.db.bagCustomizer.bindText == nil then
+						E.db.bagCustomizer.bindText = {}
+					end
+
+					E.db.bagCustomizer.bindText.debug = value
+					if value and not E.db.bagCustomizer.debug then
+						print("|cFFFFFF00Note:|r Master debug toggle is OFF. Enable it to see debug messages.")
+					end
+				end,
+			},
+
+			-- Currencies module debug toggle
+			currencyModule = {
+				order = 32,
+				type = "toggle",
+				name = "Currency",
+				width = 1,
+				get = function()
+					if E.db.bagCustomizer.currency == nil then
+						E.db.bagCustomizer.currency = {}
+					end
+
+					if E.db.bagCustomizer.currency.debug == nil then
+						E.db.bagCustomizer.currency.debug = true
+					end
+
+					return E.db.bagCustomizer.currency.debug
+				end,
+				set = function(_, value)
+					if E.db.bagCustomizer.currency == nil then
+						E.db.bagCustomizer.currency = {}
+					end
+
+					E.db.bagCustomizer.currency.debug = value
+					if value and not E.db.bagCustomizer.debug then
+						print("|cFFFFFF00Note:|r Master debug toggle is OFF. Enable it to see debug messages.")
+					end
+				end,
+			},
+
+			-- MiscTextures module debug toggle
+			MiscTexturesModule = {
+				order = 33,
+				type = "toggle",
+				name = "Currency Textures",
+				width = 1,
+				get = function()
+					if E.db.bagCustomizer.miscTextures == nil then
+						E.db.bagCustomizer.miscTextures = {}
+					end
+
+					if E.db.bagCustomizer.miscTextures.debug == nil then
+						E.db.bagCustomizer.miscTextures.debug = true
+					end
+
+					return E.db.bagCustomizer.miscTextures.debug
+				end,
+				set = function(_, value)
+					if E.db.bagCustomizer.miscTextures == nil then
+						E.db.bagCustomizer.miscTextures = {}
+					end
+
+					E.db.bagCustomizer.miscTextures.debug = value
+					if value and not E.db.bagCustomizer.debug then
+						print("|cFFFFFF00Note:|r Master debug toggle is OFF. Enable it to see debug messages.")
+					end
+				end,
+			},
+
 			-- FrameHeight module debug toggle
 			frameHeightModule = {
-				order = 24,
+				order = 34,
 				type = "toggle",
 				name = "Bag Height",
-				width = 1.2,
+				width = 1,
 				get = function()
 					if E.db.bagCustomizer.frameHeight == nil then
 						E.db.bagCustomizer.frameHeight = {}
@@ -251,10 +336,10 @@ local function CreateDebugOptions()
 
 			-- Background module debug toggle
 			inventoryBackgroundAdjustModule = {
-				order = 25,
+				order = 35,
 				type = "toggle",
 				name = "InventoryBackgroundAdjust",
-				width = 1.2,
+				width = 1,
 				get = function()
 					if E.db.bagCustomizer.inventoryBackgroundAdjust == nil then
 						E.db.bagCustomizer.inventoryBackgroundAdjust = {}
@@ -278,12 +363,41 @@ local function CreateDebugOptions()
 				end,
 			},
 
+			-- InventorySlots module debug toggle
+			inventorySlotsModule = {
+				order = 36,
+				type = "toggle",
+				name = "Inventory Slots",
+				width = 1,
+				get = function()
+					if E.db.bagCustomizer.inventorySlots == nil then
+						E.db.bagCustomizer.inventorySlots = {}
+					end
+
+					if E.db.bagCustomizer.inventorySlots.debug == nil then
+						E.db.bagCustomizer.inventorySlots.debug = true
+					end
+
+					return E.db.bagCustomizer.inventorySlots.debug
+				end,
+				set = function(_, value)
+					if E.db.bagCustomizer.inventorySlots == nil then
+						E.db.bagCustomizer.inventorySlots = {}
+					end
+
+					E.db.bagCustomizer.inventorySlots.debug = value
+					if value and not E.db.bagCustomizer.debug then
+						print("|cFFFFFF00Note:|r Master debug toggle is OFF. Enable it to see debug messages.")
+					end
+				end,
+			},
+
 			-- Textures module debug toggle
 			mainTexturesModule = {
-				order = 26,
+				order = 37,
 				type = "toggle",
 				name = "MainTextures",
-				width = 1.2,
+				width = 1,
 				get = function()
 					if E.db.bagCustomizer.mainTextures == nil then
 						E.db.bagCustomizer.mainTextures = {}
@@ -307,70 +421,12 @@ local function CreateDebugOptions()
 				end,
 			},
 
-			-- MiscTextures module debug toggle
-			MiscTexturesModule = {
-				order = 27,
-				type = "toggle",
-				name = "Misc Textures",
-				width = 1.2,
-				get = function()
-					if E.db.bagCustomizer.miscTextures == nil then
-						E.db.bagCustomizer.miscTextures = {}
-					end
-
-					if E.db.bagCustomizer.miscTextures.debug == nil then
-						E.db.bagCustomizer.miscTextures.debug = true
-					end
-
-					return E.db.bagCustomizer.miscTextures.debug
-				end,
-				set = function(_, value)
-					if E.db.bagCustomizer.miscTextures == nil then
-						E.db.bagCustomizer.miscTextures = {}
-					end
-
-					E.db.bagCustomizer.miscTextures.debug = value
-					if value and not E.db.bagCustomizer.debug then
-						print("|cFFFFFF00Note:|r Master debug toggle is OFF. Enable it to see debug messages.")
-					end
-				end,
-			},
-
-			-- Currencies module debug toggle
-			currencyModule = {
-				order = 28,
-				type = "toggle",
-				name = "currency",
-				width = 1.2,
-				get = function()
-					if E.db.bagCustomizer.currency == nil then
-						E.db.bagCustomizer.currency = {}
-					end
-
-					if E.db.bagCustomizer.currency.debug == nil then
-						E.db.bagCustomizer.currency.debug = true
-					end
-
-					return E.db.bagCustomizer.currency.debug
-				end,
-				set = function(_, value)
-					if E.db.bagCustomizer.currency == nil then
-						E.db.bagCustomizer.currency = {}
-					end
-
-					E.db.bagCustomizer.currency.debug = value
-					if value and not E.db.bagCustomizer.debug then
-						print("|cFFFFFF00Note:|r Master debug toggle is OFF. Enable it to see debug messages.")
-					end
-				end,
-			},
-
 			-- MiscBorders module debug toggle
 			MiscBordersModule = {
-				order = 29,
+				order = 38,
 				type = "toggle",
 				name = "Misc Borders",
-				width = 1.2,
+				width = 1,
 				get = function()
 					if E.db.bagCustomizer.miscBorders == nil then
 						E.db.bagCustomizer.miscBorders = {}
@@ -396,10 +452,10 @@ local function CreateDebugOptions()
 
 			-- SearchBar module debug toggle
 			searchBarModule = {
-				order = 30,
+				order = 39,
 				type = "toggle",
 				name = "Search Bar",
-				width = 1.2,
+				width = 1,
 				get = function()
 					if E.db.bagCustomizer.searchBar == nil then
 						E.db.bagCustomizer.searchBar = {}
@@ -423,58 +479,35 @@ local function CreateDebugOptions()
 				end,
 			},
 
-			-- BindText module debug toggle
-			bindTextModule = {
-				order = 31,
-				type = "toggle",
-				name = "Bind Text",
-				width = 1.2,
-				get = function()
-					if E.db.bagCustomizer.bindText == nil then
-						E.db.bagCustomizer.bindText = {}
-					end
-
-					if E.db.bagCustomizer.bindText.debug == nil then
-						E.db.bagCustomizer.bindText.debug = true
-					end
-
-					return E.db.bagCustomizer.bindText.debug
-				end,
-				set = function(_, value)
-					if E.db.bagCustomizer.bindText == nil then
-						E.db.bagCustomizer.bindText = {}
-					end
-
-					E.db.bagCustomizer.bindText.debug = value
-					if value and not E.db.bagCustomizer.debug then
-						print("|cFFFFFF00Note:|r Master debug toggle is OFF. Enable it to see debug messages.")
-					end
-				end,
+			utilityHeader = {
+				order = 50,
+				type = "header",
+				name = "Utility Debug Settings",
 			},
 
-			-- InventorySlots module debug toggle
-			inventorySlotsModule = {
-				order = 32,
+			-- ImportExportDialog module debug toggle
+			importExportDialogModule = {
+				order = 51,
 				type = "toggle",
-				name = "Inventory Slots",
-				width = 1.2,
+				name = "Import/Export Dialog",
+				width = 1,
 				get = function()
-					if E.db.bagCustomizer.inventorySlots == nil then
-						E.db.bagCustomizer.inventorySlots = {}
+					if E.db.bagCustomizer.importExportDialog == nil then
+						E.db.bagCustomizer.importExportDialog = {}
 					end
 
-					if E.db.bagCustomizer.inventorySlots.debug == nil then
-						E.db.bagCustomizer.inventorySlots.debug = true
+					if E.db.bagCustomizer.importExportDialog.debug == nil then
+						E.db.bagCustomizer.importExportDialog.debug = true
 					end
 
-					return E.db.bagCustomizer.inventorySlots.debug
+					return E.db.bagCustomizer.importExportDialog.debug
 				end,
 				set = function(_, value)
-					if E.db.bagCustomizer.inventorySlots == nil then
-						E.db.bagCustomizer.inventorySlots = {}
+					if E.db.bagCustomizer.importExportDialog == nil then
+						E.db.bagCustomizer.importExportDialog = {}
 					end
 
-					E.db.bagCustomizer.inventorySlots.debug = value
+					E.db.bagCustomizer.importExportDialog.debug = value
 					if value and not E.db.bagCustomizer.debug then
 						print("|cFFFFFF00Note:|r Master debug toggle is OFF. Enable it to see debug messages.")
 					end
@@ -483,10 +516,10 @@ local function CreateDebugOptions()
 
 			-- ThemeManager module debug toggle
 			themeManagerModule = {
-				order = 33,
+				order = 52,
 				type = "toggle",
 				name = "Theme Manager",
-				width = 1.2,
+				width = 1,
 				get = function()
 					if E.db.bagCustomizer.themeManager == nil then
 						E.db.bagCustomizer.themeManager = {}
@@ -510,34 +543,6 @@ local function CreateDebugOptions()
 				end,
 			},
 
-			-- ImportExportDialog module debug toggle
-			importExportDialogModule = {
-				order = 34,
-				type = "toggle",
-				name = "Import/Export Dialog",
-				width = 1.2,
-				get = function()
-					if E.db.bagCustomizer.importExportDialog == nil then
-						E.db.bagCustomizer.importExportDialog = {}
-					end
-
-					if E.db.bagCustomizer.importExportDialog.debug == nil then
-						E.db.bagCustomizer.importExportDialog.debug = true
-					end
-
-					return E.db.bagCustomizer.importExportDialog.debug
-				end,
-				set = function(_, value)
-					if E.db.bagCustomizer.importExportDialog == nil then
-						E.db.bagCustomizer.importExportDialog = {}
-					end
-
-					E.db.bagCustomizer.importExportDialog.debug = value
-					if value and not E.db.bagCustomizer.debug then
-						print("|cFFFFFF00Note:|r Master debug toggle is OFF. Enable it to see debug messages.")
-					end
-				end,
-			},
 		},
 	}
 	return debugOptions
@@ -3294,7 +3299,7 @@ local function CreateInventorySlotsMainOptions()
 						-- For regular presets, apply all preset settings
 						local inventorySlots = addon.elements.inventorySlots
 						local presetData = inventorySlots.presetComponentMap[value]
-						local presetScale = presetData and presetData.ScaleFactor or 100
+						local presetScale = presetData and presetData.ScaleFactor or 104
 						settings.scaleFactor = presetScale
 						settings.globalScaleFactor = presetScale / 100
 						if presetData then
@@ -3894,8 +3899,8 @@ local function CreateInventorySlotsMainOptions()
 					local preset = settings.preset or "blizzard_modern"
 					local inventorySlots = addon.elements.inventorySlots
 					local presetScale = inventorySlots.presetComponentMap[preset] and
-							inventorySlots.presetComponentMap[preset].ScaleFactor or 100
-					local currentScale = settings.scaleFactor or 100
+							inventorySlots.presetComponentMap[preset].ScaleFactor or 104
+					local currentScale = settings.scaleFactor or 104
 					if currentScale ~= presetScale then
 						return "|cFFFF5500Scale Factor (Modified)|cFF00BBFF*|r"
 					end
@@ -3914,7 +3919,7 @@ local function CreateInventorySlotsMainOptions()
 				end,
 				get = function()
 					return E.db.bagCustomizer.inventorySlots and
-							E.db.bagCustomizer.inventorySlots.scaleFactor or 100
+							E.db.bagCustomizer.inventorySlots.scaleFactor or 104
 				end,
 				set = function(_, value)
 					if not E.db.bagCustomizer.inventorySlots then
@@ -3929,7 +3934,7 @@ local function CreateInventorySlotsMainOptions()
 					local preset = E.db.bagCustomizer.inventorySlots.preset or "blizzard_modern"
 					local inventorySlots = addon.elements.inventorySlots
 					local presetScale = inventorySlots.presetComponentMap[preset] and
-							inventorySlots.presetComponentMap[preset].ScaleFactor or 100
+							inventorySlots.presetComponentMap[preset].ScaleFactor or 104
 					local wasCustomized = E.db.bagCustomizer.inventorySlots.isCustomized
 					E.db.bagCustomizer.inventorySlots.isCustomized = wasCustomized or
 							(value ~= presetScale)
@@ -3964,8 +3969,8 @@ local function CreateInventorySlotsMainOptions()
 						return true
 					end
 
-					local presetScale = presetData.ScaleFactor or 100
-					local currentScale = settings.scaleFactor or 100
+					local presetScale = presetData.ScaleFactor or 104
+					local currentScale = settings.scaleFactor or 104
 					local scaleModified = currentScale ~= presetScale
 					-- Check if any of the new toggle options differ from preset defaults
 					local highlightModified = settings.disableElvUIHighlight ~= (presetData.disableElvUIHighlight or false)
@@ -3991,7 +3996,7 @@ local function CreateInventorySlotsMainOptions()
 					local inventorySlots = addon.elements.inventorySlots
 					local presetData = inventorySlots.presetComponentMap[preset]
 					-- Reset scale factor to preset's default
-					local presetScale = presetData and presetData.ScaleFactor or 100
+					local presetScale = presetData and presetData.ScaleFactor or 104
 					settings.scaleFactor = presetScale
 					settings.globalScaleFactor = presetScale / 100
 					-- Reset the three toggle options to preset defaults

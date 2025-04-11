@@ -503,14 +503,9 @@ function addon:HandleProfileChange()
 
 	-- Clear module cache on profile changes
 	self:ClearModuleCache()
-	-- Update UI if bags are visible
-	if self:IsAnyBagVisible() then
-		self:Update("ProfileChanged", true)
-	end
-
-	-- Trigger profile change event for modules
-	self:TriggerEvent("PROFILE_CHANGED")
-	debug("Profile change handling complete")
+	-- REMOVED: Update call - let Initialize/ADDON_LOADED handle initial update
+	-- REMOVED: Trigger PROFILE_CHANGED event - not needed here
+	debug("Settings check on login complete")
 end
 
 -- NEW FUNCTION: Set up proper hooks to ElvUI's profile system
@@ -521,25 +516,113 @@ function addon:SetupProfileSystem()
 		debug("Registered default settings with ElvUI profile system")
 	end
 
-	-- Hook directly into ElvUI's profile system
-	-- This is the most reliable way to detect profile changes
-	hooksecurefunc(E, "UpdateDB", function()
-		self:HandleProfileChange()
+	-- Primary method: Direct hook to ElvUI's profile change function
+	self:SecureHook(E, "UpdateDB", function()
+		debug("ElvUI profile change detected via UpdateDB hook")
+		-- Short delay to ensure DB is fully updated
+		C_Timer.After(0.5, function()
+			self:ReloadAddon()
+		end)
 	end)
-	-- Use reliable events as backup to catch any changes
-	-- This replaces the non-existent ELVUI_CONFIG_UPDATED event
+	-- Hook profile operations directly as backup methods
+	if E.data and E.data.RegisterCallback then
+		E.data.RegisterCallback(self, "OnProfileChanged", function()
+			debug("ElvUI profile changed via callback")
+			C_Timer.After(0.5, function()
+				self:ReloadAddon()
+			end)
+		end)
+		E.data.RegisterCallback(self, "OnProfileCopied", function()
+			debug("ElvUI profile copied via callback")
+			C_Timer.After(0.5, function()
+				self:ReloadAddon()
+			end)
+		end)
+		E.data.RegisterCallback(self, "OnProfileReset", function()
+			debug("ElvUI profile reset via callback")
+			C_Timer.After(0.5, function()
+				self:ReloadAddon()
+			end)
+		end)
+	else
+		-- Alternative backup hooks if callbacks aren't available
+		self:SecureHook(E, "SetupProfile", function()
+			debug("ElvUI profile setup detected")
+			C_Timer.After(0.3, function()
+				self:ReloadAddon()
+			end)
+		end)
+		-- Try to hook the profile GUI actions
+		if E.Options and E.Options.args and E.Options.args.profiles then
+			self:SecureHook(E.Options.args.profiles.handler, "CopyProfile", function()
+				debug("ElvUI CopyProfile detected")
+				C_Timer.After(0.3, function()
+					self:ReloadAddon()
+				end)
+			end)
+		end
+	end
+
+	-- Register for game events that might indicate profile changes
 	self:RegisterEvent("PLAYER_ENTERING_WORLD", function()
 		C_Timer.After(0.5, function()
 			self:HandleProfileChange()
 		end)
 	end)
-	-- Also register for loading screen end as another backup
-	self:RegisterEvent("LOADING_SCREEN_DISABLED", function()
-		C_Timer.After(0.5, function()
-			self:HandleProfileChange()
-		end)
-	end)
 	debug("Profile system initialized")
+end
+
+-- Reload for ElvUI profile change
+function addon:ReloadAddon()
+	debug("ReloadAddon: Profile change detected. Starting full reload process.")
+	-- Step 1: Immediate Cleanup
+	debug("ReloadAddon: Running immediate cleanup...")
+	self:CleanupModules() -- Ensure this calls MainTextures:Revert, etc. Use enhanced logging there.
+	self:ResetAllResourceCaches()
+	self:UnhookAll()     -- This REMOVES the B:Layout hook temporarily
+	-- Ensure AceEvent registrations are handled correctly if not automatic
+	-- e.g., self:UnregisterAllEvents() if using AceEvent directly
+	self:ClearModuleCache()
+	wipe(self.loadedModules)
+	self.bagsInitialized = false
+	self.firstTimeOpens = { bags = true, bank = true, warbandBank = true }
+	collectgarbage("collect")
+	debug("ReloadAddon: Immediate cleanup finished.")
+	-- Step 2: Schedule Re-Initialization and Update after a LONGER delay
+	local reinitDelay = 0.8 -- Start with 0.8s, increase to 1.0s or 1.2s if needed
+	debug("ReloadAddon: Scheduling re-initialization in " .. reinitDelay .. " seconds...")
+	C_Timer.After(reinitDelay, function()
+		debug("ReloadAddon: Timer fired. Starting re-initialization...")
+		-- Make sure ElvUI's Bag module reference is valid *before* initializing
+		local currentB = E:GetModule("Bags")
+		if not currentB then
+			debug("ReloadAddon: ERROR - ElvUI Bags module (B) not found before re-initialization! Aborting reload.")
+			return
+		end
+
+		-- Refresh the global B reference if necessary (though modules usually get it)
+		B = currentB -- Update the reference used by hooks
+		-- Re-initialize the addon from scratch (will read the NEW E.db)
+		-- This calls InitializeModules -> UpdateSystem:Initialize -> UpdateSystem:SetupHooks
+		self:Initialize()
+		debug("ReloadAddon: Initialization complete. Triggering update for visible bags...")
+		local currentBagsVisible = self:IsAnyBagVisible()
+		-- Update any visible frames using the new settings
+		if currentBagsVisible then
+			local UpdateSystem = self:GetCachedModule("updateSystem")
+			if UpdateSystem and UpdateSystem.FullUpdate then
+				debug("ReloadAddon: Calling UpdateSystem:FullUpdate()")
+				UpdateSystem:FullUpdate()
+			else
+				debug("ReloadAddon: Calling addon:Update(AddonReloaded)")
+				self:Update("AddonReloaded", true) -- Fallback
+			end
+		else
+			debug("ReloadAddon: Bags not visible, skipping post-init update.")
+		end
+
+		debug("ReloadAddon: Addon reload complete.")
+	end)
 end
 
 -- Handle first bag open
@@ -692,23 +775,15 @@ function addon:InitializeModules()
 	-- Define module initialization order
 	local moduleOrder = {
 
-		"themeManager",            -- Theme manager for settings
-
-		"mainTextures",            -- Textures needed by other modules
-
-		"inventoryBackgroundAdjust", -- Background before other visual elements
-
-		"inventorySlots",          -- Before bindText
-
-		"miscTextures",            -- After Textures
-
-		"bindText",                -- After inventorySlots
-
-		"searchBar",               -- Last UI element
-
-		"miscBorders",
-
-		"frameHeight",
+		"themeManager",            -- 1. Handles themes, needed early if others read theme settings on init.
+		"mainTextures",            -- 2. Applies base UI textures (top art, etc.).
+		"inventoryBackgroundAdjust", -- 3. Modifies the base background color/opacity.
+		"frameHeight",             -- 4. Modifies overall frame height & adds panel, affects layout/anchors.
+		"currencyAndTextures",     -- 5. Handles close button (needs frameHeight), currency/gold layout. (Includes miscTextures functionality).
+		"searchBar",               -- 6. Positions search bar/buttons, potentially relative to frameHeight changes.
+		"inventorySlots",          -- 7. Modifies individual slots after main layout is somewhat stable.
+		"bindText",                -- 8. Depends directly on inventorySlots finding the text elements.
+		"miscBorders",             -- 9. Applies borders to elements after they are set up.
 
 	}
 	-- Initialize modules in order
@@ -764,6 +839,12 @@ end
 
 -- Initialize addon
 function addon:Initialize()
+	-- Check if we're already initialized to prevent double initialization
+	if self._fullyInitialized then
+		debug("Initialize called but addon already initialized, skipping")
+		return
+	end
+
 	-- Perform ESSENTIAL setup first, even if in combat
 	-- 1. Ensure the main DB table exists
 	if not E.db.bagCustomizer then
@@ -866,11 +947,10 @@ function addon:Initialize()
 	-- Register essential events (safe to run again, RegisterEvent handles duplicates)
 	-- No need to re-register PLAYER_REGEN_*, they are handled by the combat check block
 	addon:RegisterEvent("PLAYER_ENTERING_WORLD", function()
-		addon.firstTimeOpens = { bags = true, bank = true, warbandBank = true }
-		C_Timer.After(1, function()
-			addon:Update("PLAYER_ENTERING_WORLD event", true)
-		end)
-		debug("Player entering world processed")
+		-- addon.firstTimeOpens = { bags = true, bank = true, warbandBank = true } -- Keep this if needed
+		self:HandleProfileChange() -- Call the simplified settings check
+		-- The main Update logic should happen naturally via ADDON_LOADED or first bag open
+		debug("Player entering world processed (settings ensured).")
 	end)
 	addon:RegisterEvent("ADDON_LOADED", function(_, addonName)
 		if addonName == "BagCustomizer_for_ElvUI" or addonName == "ElvUI" then
@@ -889,6 +969,8 @@ function addon:Initialize()
 	addon.memoryCleanupTimer = C_Timer.NewTicker(120, function()
 		collectgarbage("step", 500)
 	end)
+	-- Mark as fully initialized at the end
+	self._fullyInitialized = true
 	debug("Full initialization complete.")
 	addon:TriggerEvent("INITIALIZATION_COMPLETE")
 end
@@ -901,11 +983,15 @@ function addon:CleanupModules()
 	-- Cleanup in reverse dependency order
 	for _, moduleName in ipairs({
 
-		"bindText", "miscTextures", "inventorySlots",
-
-		"searchBar", "inventoryBackgroundAdjust", "mainTextures",
-
-		"themeManager",
+		"miscBorders",             -- 9. Cleans up borders applied last.
+		"bindText",                -- 8. Cleans up text within slots.
+		"inventorySlots",          -- 7. Reverts complex slot customizations.
+		"searchBar",               -- 6. Reverts search bar changes.
+		"currencyAndTextures",     -- 5. Reverts close button, currency/gold display.
+		"frameHeight",             -- 4. Removes panel, reverts frame height changes.
+		"inventoryBackgroundAdjust", -- 3. Reverts background color/opacity.
+		"mainTextures",            -- 2. Removes base UI textures.
+		"themeManager",            -- 1. Cleans up theme system (likely minimal visual).
 
 	}) do
 		if self.elements[moduleName] and self.elements[moduleName].Cleanup then

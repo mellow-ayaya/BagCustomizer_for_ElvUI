@@ -69,6 +69,85 @@ local function debug(msg)
 end
 
 -- ==========================================
+-- SLASH COMMAND REGISTRATION
+-- ==========================================
+-- Slash command to open plugin config
+-- Flag to prevent potential re-entry
+local bcfe_is_running = false
+-- Use matching keys for registration (Standard Practice)
+SLASH_BAGCUSTOMIZERFORELVUI1 = "/bcfe"
+SlashCmdList["BAGCUSTOMIZERFORELVUI"] = function(msg) -- Key now matches: BAGCUSTOMIZERFORELVUI1
+	if bcfe_is_running then return end
+
+	-- Check prerequisites
+	if not E then
+		print("Bag Customizer Error: ElvUI (E) is not available.")
+		return
+	end
+
+	if not E.ToggleOptions then
+		print("Bag Customizer Error: ElvUI function E:ToggleOptions not found (might still be initializing?).")
+		return
+	end
+
+	bcfe_is_running = true
+	-- Open the ElvUI config window
+	local success_toggle, err_toggle = pcall(E.ToggleOptions, E, msg)
+	if not success_toggle then
+		print(string.format("Bag Customizer Error: Failed executing E:ToggleOptions(). Error: %s", tostring(err_toggle)))
+		-- Clear flag on error
+		C_Timer.After(0.1, function() bcfe_is_running = false end)
+		return
+	end
+
+	-- Schedule navigation after a short delay
+	C_Timer.After(0.15, function() -- 0.15 or 0.2 second delay should be sufficient
+		if E and E.Libs and E.Libs.AceConfigDialog then
+			local ACD = E.Libs.AceConfigDialog
+			local targetGroupKey = "bagCustomizer" -- The key used in E.Options.args
+			local success_select, err_select = pcall(ACD.SelectGroup, ACD, "ElvUI", targetGroupKey)
+			if not success_select then
+				print(string.format("Bag Customizer Error: Failed executing SelectGroup(%s). Error: %s", targetGroupKey,
+					tostring(err_select)))
+			end
+		else
+			-- This error is less likely now but good to keep
+			print("Bag Customizer Error: E or AceConfigDialog unavailable before SelectGroup.")
+		end
+
+		-- Clear the running flag *after* attempting SelectGroup
+		bcfe_is_running = false
+	end)
+end
+-- Register debug slash command
+SLASH_BAGCUSTOMIZERDEBUG1 = "/bcdebug"
+SlashCmdList["BAGCUSTOMIZERDEBUG"] = function() -- Match: BAGCUSTOMIZERDEBUG1
+	if not E then
+		print("BC_DEBUG Error: E is nil in /bcdebug")
+		return
+	end
+
+	local addon = E:GetModule("BagCustomizer")
+	if addon and addon.DumpDebugSettings then
+		addon:DumpDebugSettings()
+	end
+end
+print("BC_DEBUG: Registered /bcdebug (Key: BAGCUSTOMIZERDEBUG1)") -- CONFIRMATION
+-- Add a slash command to reset debug settings
+SLASH_BAGCUSTOMIZERRESET1 = "/bcreset"
+SlashCmdList["BAGCUSTOMIZERRESET"] = function() -- Match: BAGCUSTOMIZERRESET1
+	if not E then
+		print("BC_DEBUG Error: E is nil in /bcreset")
+		return
+	end
+
+	local addon = E:GetModule("BagCustomizer")
+	if addon and addon.ResetDebugSettings then
+		addon:ResetDebugSettings()
+	end
+end
+print("BC_DEBUG: Registered /bcreset (Key: BAGCUSTOMIZERRESET)") -- CONFIRMATION
+-- ==========================================
 -- Event Bus System
 -- ==========================================
 -- Initialize event system storage
@@ -983,21 +1062,5 @@ function addon:EnsureSettings(defaults, current)
 	return current
 end
 
--- Register debug slash command
-SLASH_BAGCUSTOMIZERDEBUG1 = "/bcdebug"
-SlashCmdList["BAGCUSTOMIZERDEBUG"] = function()
-	local addon = E:GetModule("BagCustomizer")
-	if addon then
-		addon:DumpDebugSettings()
-	end
-end
--- Add a slash command to reset debug settings
-SLASH_BAGCUSTOMIZERRESET1 = "/bcreset"
-SlashCmdList["BAGCUSTOMIZERRESET"] = function()
-	local addon = E:GetModule("BagCustomizer")
-	if addon then
-		addon:ResetDebugSettings()
-	end
-end
 -- Register with ElvUI
 E:RegisterModule(addon:GetName())

@@ -1,4 +1,7 @@
 ## 1.0.2 - 2025-04-11
+fixed close button texture sometimes disappearing when loading themes
+
+## 1.0.2 - 2025-04-11
 Fixed typo in texture name
 Fixed default settings for currency texture height offset
 

@@ -57,11 +57,12 @@ function ThemeManager:Initialize()
 	-- Define the built-in themes (could be moved to Settings.lua)
 	self.builtInThemes = {
 		["Blizzard Modern"] =
-		"BCTHEME:^1^T^Sname^Sblizz~`(2)^Ssettings^T^Scustom1PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^SgoldTextTexture^T^StileSpacing^N0^Senable^B^Suse3Slice^B^SyOffset^N0^SanchorToHolderFrame^B^SleftBreakPct^N5^SautoHeight^B^SmatchHolderFrameWidth^B^SpreserveAspectRatio^b^Sscale^N1^SedgeSize^N10^SuseTiling^B^SholderFrameYOffset^N0^SrightBreakPct^N95^SwidthModifier^N0^Salpha^N1^StileOffset^N0^SxOffset^N0^Swidth^N100^SautoWidth^B^SholderFrameXOffset^N0^Sheight^N20^SheightAdjustment^N0^Stexture^Sgold_blizzard_modern.tga^SuseCustomColor^b^t^StextureHeightOffset^N-4^ScurrencyHorizontalPadding^N8^Scustom3PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^S_metadata^T^Screated^N1744335554^SexportTime^N1744335559^Sversion^S2.2^SuserName^SFrenir^t^ScustomTexture^T^Stexture^Sbackground.tga^SrepeatVertically^b^Spoint^SCENTER^Senable^b^SxOffset^N0^Sscale^N1^Salpha^N0.5^SyOffset^N0^t^SthemeManager^T^Sdebug^b^t^SgoldTextYOffset^N0^Senabled^B^Sdebug^b^SbindTextSettings^T^SapplyToWarbound^B^SapplyToBindOnEquip^B^SapplyToPoorQuality^b^Senable^B^Sbrightness^N250^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^SuseCustomColor^b^t^Score^T^Sdebug^b^t^SenableButtonYChanges^B^ScurrencyModuleEnabled^B^SartBackground^T^SverticalSize^N100^Spoint^SCENTER^SxOffset^N0^SyOffset^N0^ShorizontalSize^N100^ScropHorizontalAmount^N0^Stexture^Sart_northrend.tga^SmaintainArtAspectRatio^B^SmaintainMaskAspectRatio^B^ScropHorizontally^b^Salpha^N1^Sdesaturate^b^Sscale^N1^SmaskShape^Salpha_fade_soft_circular.tga^Senable^b^ScropVertically^b^SuseEdgeFade^b^SuseTint^b^ScropVerticalAmount^N0^StintColor^T^Sb^N1^Sg^N1^Sr^N1^t^t^ScurrencyTexture^T^StileSpacing^N0^Sscale^N1^SrowHeightOffset^N0^StextureXOffset^N-12^SleftBreakPct^N5^Stexture^Scurrency_blizzard_modern.tga^SyOffset^N0^SmatchHolderFrameWidth^B^StextureYOffset^N0^Suse3Slice^B^SedgeSize^N10^SuseTiling^B^SrightBreakPct^N95^StileOffset^N0^SuseVerticalTiling^B^Salpha^N1^Swidth^N100^SxOffset^N0^SwidthModifier^N100^SwidthAdjustment^N0^Senable^B^Sheight^N30^StextureAnchor^SCENTER^SpreserveAspectRatio^B^SautoFitHeight^B^t^SsearchBar^T^Sdebug^b^t^SmainTextures^T^Sdebug^b^t^SinventoryBackgroundAdjust^T^Scolor^T^Sb^N0.1^Sg^N0.1^Sr^N0.1^t^SenableColor^B^Sdebug^b^Sopacity^N0.78^t^SreverseCurrencyGrowth^B^SsearchBarBackdrop^T^ShideBorder^B^SstackButtonYOffset^N20.5^Senable^B^Scolor^T^Sb^N0.1^Sg^N0.1^Sr^N0.1^t^Salpha^N0.7^SyOffset^N21^t^Ssettings^T^Sdebug^b^t^SbindText^T^Sdebug^b^t^ScurrencyTopPadding^N34^Sborders^T^Sminimap^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N9^Ssize^N24^t^Selements^T^Sminimap^b^Scleanup^B^SframeHeight^B^SsearchBar^B^SvendorGrays^B^Sstack^B^StoggleBars^B^SmainFrame^B^t^SsearchBar^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N5^Ssize^N14^t^Sbuttons^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N4^Ssize^N14^t^Senable^B^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Sstyle^Swowui^SmainFrame^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N6^Ssize^N16^t^t^SresourceManager^T^Sdebug^b^t^SgoldAnchorPosition^SBOTTOM_RIGHT_BELOW^ShideDefaultBorders^B^SframeHeight^T^Senable^B^Sdebug^b^SbagSpacing^N35^t^SmiscTextures^T^Sdebug^b^t^Scurrencies^T^Sdebug^b^t^Scustom2PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^StopTexture^T^StileSpacing^N0^Sscale^N1^SyOffset^N37^SleftBreakPct^N10^SmanualDimensions^b^Stexture^Stop_blizzard_modern.tga^SedgeSize^N24^StextureHeight^N42^Salpha^N1^StileOffset^N0^SxOffset^N0^SrightBreakPct^N95^StextureWidth^N435^SwidthAdjust^N4^Sheight^N30^Senable^B^SuseTiling^B^SuseSlice^B^t^SgoldTextXOffset^N0^ScurrencyPaddingSize^N30^SuiBackground^T^SyOffset^N0^Spoint^SCENTER^SxOffset^N0^Senable^b^Sscale^N1^Salpha^N1^Stexture^S^t^SupdateSystem^T^Sdebug^b^t^SmiscBorders^T^Sdebug^b^t^SinventorySlots^T^Senable^B^SglobalBrightness^N100^StextureAlpha^N1^SemptySlotColorIntensity^T^Sunassigned^N100^Sassigned^N100^t^SseparateEmptyBorder^B^SuserModifiedScale^b^SemptySlotAlphaAssigned^N0.6^SemptySlotTextureAlpha^N1^SscaleFactor^N104^SemptySlotColor^T^Sb^N1^Sg^N1^Sr^N1^t^SemptySlotBrightness^T^Sunassigned^N100^Sassigned^N100^t^SpoorQualityColor^T^Sb^N0.55^Sg^N0.55^Sr^N0.55^t^ScolorEmptySlotsByAssignment^B^SglobalScaleFactor^N1^Sdebug^b^Spreset^Sblizzard_modern^SshowCommonQualityBorders^B^SglobalColorIntensity^N100^SqualityColorIntensity^T^N1^N100^N2^N100^N3^N100^N4^N100^N5^N100^N6^N100^N7^N100^N0^N100^t^SqualityBrightness^T^N1^N100^N2^N100^N3^N100^N4^N100^N5^N100^N6^N100^N7^N100^N0^N100^t^SshowIndividualBrightness^b^SuseMainBorderForAssignedEmpty^B^Sstyle^SRounded^SshowIndividualColorIntensity^b^SshowPoorQualityBorders^B^ScommonQualityColor^T^Sb^N0.85^Sg^N0.85^Sr^N0.85^t^SdisableElvUIHighlight^B^SemptySlotOpacity^N1^t^SimportExportDialog^T^Sdebug^b^t^ScloseButtonTexture^T^Senable^B^Salpha^N1^StextureXOffset^N0^SbuttonScale^N1.5^StextureYOffset^N0^SanchorToFrameHeight^B^SbuttonXOffset^N7^SbuttonYOffset^N6^Sscale^N1.5^Stexture^Sclose_blizzard_modern.tga^t^SfixGoldTextStrata^B^t^Sversion^S2.2^t^^",
-		["ElvUI Default"] =
-		"BCTHEME:^1^T^Sname^Sekv^Ssettings^T^Scustom1PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^SgoldTextTexture^T^StileSpacing^N0^Senable^B^Suse3Slice^B^SyOffset^N0^SanchorToHolderFrame^B^SleftBreakPct^N5^SautoHeight^B^SmatchHolderFrameWidth^B^SpreserveAspectRatio^b^Sscale^N1^SedgeSize^N10^SuseTiling^B^SholderFrameYOffset^N0^SrightBreakPct^N95^SwidthModifier^N0^Salpha^N1^StileOffset^N0^SxOffset^N0^Swidth^N100^SautoWidth^B^SholderFrameXOffset^N0^Sheight^N20^SheightAdjustment^N0^Stexture^Sgold_blizzard_modern.tga^SuseCustomColor^b^t^StextureHeightOffset^N-4^ScurrencyHorizontalPadding^N8^Scustom3PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^S_metadata^T^Screated^N1744335709^SexportTime^N1744335725^Sversion^S2.2^SuserName^SFrenir^t^ScustomTexture^T^Stexture^Sbackground.tga^SrepeatVertically^b^Spoint^SCENTER^Senable^b^SxOffset^N0^Sscale^N1^Salpha^N0.5^SyOffset^N0^t^SthemeManager^T^Sdebug^b^t^SgoldTextYOffset^N0^Senabled^B^Sdebug^b^SbindTextSettings^T^SapplyToWarbound^B^SapplyToBindOnEquip^B^SapplyToPoorQuality^b^Senable^b^Sbrightness^N200^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^SuseCustomColor^b^t^Score^T^Sdebug^b^t^SenableButtonYChanges^B^ScurrencyModuleEnabled^b^SartBackground^T^SverticalSize^N100^Spoint^SCENTER^SxOffset^N0^SyOffset^N0^ShorizontalSize^N100^ScropHorizontalAmount^N0^Stexture^Sart_cataclysm.tga^SmaintainArtAspectRatio^B^SmaintainMaskAspectRatio^B^ScropHorizontally^b^Salpha^N1^Sdesaturate^B^Sscale^N1^SmaskShape^Salpha_fade_soft_circular.tga^Senable^b^ScropVertically^b^SuseEdgeFade^B^SuseTint^b^ScropVerticalAmount^N0^StintColor^T^Sb^N1^Sg^N1^Sr^N1^t^t^ScurrencyTexture^T^StileSpacing^N0^Sscale^N1^SrowHeightOffset^N0^StextureXOffset^N-12^SleftBreakPct^N5^Stexture^Scurrency_blizzard_modern.tga^SyOffset^N0^SmatchHolderFrameWidth^B^StextureYOffset^N0^Suse3Slice^B^SedgeSize^N10^SuseTiling^B^SrightBreakPct^N95^StileOffset^N0^SuseVerticalTiling^B^Salpha^N1^Swidth^N100^SxOffset^N0^SwidthModifier^N100^SwidthAdjustment^N0^Senable^B^Sheight^N30^StextureAnchor^SCENTER^SpreserveAspectRatio^B^SautoFitHeight^B^t^SsearchBar^T^Sdebug^b^t^SmainTextures^T^Sdebug^b^t^SinventoryBackgroundAdjust^T^Scolor^T^Sb^N0.1^Sg^N0.1^Sr^N0.1^t^SenableColor^b^Sdebug^b^Sopacity^N0.78^t^SreverseCurrencyGrowth^B^SsearchBarBackdrop^T^ShideBorder^B^SstackButtonYOffset^N20.5^Senable^b^Scolor^T^Sb^N0.1^Sg^N0.1^Sr^N0.1^t^Salpha^N0.7^SyOffset^N21^t^Ssettings^T^Sdebug^b^t^SbindText^T^Sdebug^b^t^ScurrencyTopPadding^N34^Sborders^T^Sminimap^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N9^Ssize^N24^t^Selements^T^Sminimap^b^Scleanup^B^SframeHeight^B^SsearchBar^B^SvendorGrays^B^Sstack^B^StoggleBars^B^SmainFrame^B^t^SsearchBar^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N5^Ssize^N14^t^Sbuttons^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N4^Ssize^N14^t^Senable^b^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Sstyle^Swowui^SmainFrame^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N6^Ssize^N16^t^t^SresourceManager^T^Sdebug^b^t^SgoldAnchorPosition^SBOTTOM_RIGHT_BELOW^ShideDefaultBorders^B^SframeHeight^T^Senable^b^Sdebug^b^SbagSpacing^N35^t^SmiscTextures^T^Sdebug^b^t^Scurrencies^T^Sdebug^b^t^Scustom2PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^StopTexture^T^StileSpacing^N0^Sscale^N1^SyOffset^N37^SleftBreakPct^N10^SmanualDimensions^b^Stexture^Stop_blizzard_modern.tga^SedgeSize^N24^StextureHeight^N42^Salpha^N1^StileOffset^N0^SxOffset^N0^SrightBreakPct^N95^StextureWidth^N435^SwidthAdjust^N4^Sheight^N30^Senable^b^SuseTiling^B^SuseSlice^B^t^SgoldTextXOffset^N0^ScurrencyPaddingSize^N30^SuiBackground^T^SyOffset^N0^Spoint^SCENTER^SxOffset^N0^Senable^b^Sscale^N1^Salpha^N1^Stexture^Sui_custom1.tga^t^SupdateSystem^T^Sdebug^b^t^SmiscBorders^T^Sdebug^b^t^SinventorySlots^T^Senable^B^SglobalBrightness^N100^StextureAlpha^N1^SemptySlotColorIntensity^T^Sunassigned^N100^Sassigned^N100^t^SseparateEmptyBorder^B^SuserModifiedScale^b^SemptySlotAlphaAssigned^N1^SemptySlotTextureAlpha^N1^SscaleFactor^N104^SemptySlotColor^T^Sb^N1^Sg^N1^Sr^N1^t^SemptySlotBrightness^T^Sunassigned^N100^Sassigned^N100^t^SpoorQualityColor^T^Sb^N0.55^Sg^N0.55^Sr^N0.55^t^ScolorEmptySlotsByAssignment^b^SglobalScaleFactor^N1.04^Sdebug^b^Spreset^Selvui_border_and_texture^SshowCommonQualityBorders^b^SglobalColorIntensity^N100^SqualityColorIntensity^T^N1^N100^N2^N100^N3^N100^N4^N100^N5^N100^N6^N100^N7^N100^N0^N100^t^SqualityBrightness^T^N1^N100^N2^N100^N3^N100^N4^N100^N5^N100^N6^N100^N7^N100^N0^N100^t^SshowIndividualBrightness^b^SuseMainBorderForAssignedEmpty^B^Sstyle^SRounded^SshowIndividualColorIntensity^b^SshowPoorQualityBorders^b^ScommonQualityColor^T^Sb^N0.85^Sg^N0.85^Sr^N0.85^t^SdisableElvUIHighlight^B^SemptySlotOpacity^N1^t^SimportExportDialog^T^Sdebug^b^t^ScloseButtonTexture^T^Senable^b^Salpha^N1^StextureXOffset^N0^SbuttonScale^N1.5^StextureYOffset^N0^SanchorToFrameHeight^B^SbuttonXOffset^N7^SbuttonYOffset^N6^Sscale^N1.5^Stexture^Sclose_blizzard_modern.tga^t^SfixGoldTextStrata^B^t^Sversion^S2.2^t^^",
-		["Northrend"] = "BCTHEME:YourFantasyThemeImportString",
-		["Sleek"] = "BCTHEME:YourSleekThemeImportString",
+		"BCTHEME:^1^T^Sname^SB~`Modern^Ssettings^T^Scustom1PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^SgoldTextTexture^T^StileSpacing^N0^Senable^B^Suse3Slice^B^SyOffset^N0^SanchorToHolderFrame^B^SleftBreakPct^N5^SautoHeight^B^SmatchHolderFrameWidth^B^SpreserveAspectRatio^b^Sscale^N1^SedgeSize^N10^SuseTiling^B^SholderFrameYOffset^N0^SrightBreakPct^N95^SwidthModifier^N0^Salpha^N1^StileOffset^N0^SxOffset^N0^Swidth^N100^SautoWidth^B^SholderFrameXOffset^N0^Sheight^N20^SheightAdjustment^N0^Stexture^Sgold_blizzard_modern.tga^SuseCustomColor^b^t^StextureHeightOffset^N-4^ScurrencyHorizontalPadding^N8^Scustom3PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^S_metadata^T^Screated^N1744350605^SexportTime^N1744350649^Sversion^S2.2^SuserName^SFrenir^t^ScustomTexture^T^Stexture^Sbackground.tga^SrepeatVertically^b^Spoint^SCENTER^Senable^b^SxOffset^N0^Sscale^N1^Salpha^N0.5^SyOffset^N0^t^SthemeManager^T^Sdebug^b^t^SgoldTextYOffset^N0^Senabled^B^Sdebug^b^SbindTextSettings^T^SapplyToWarbound^B^SapplyToBindOnEquip^B^SapplyToPoorQuality^b^Senable^B^Sbrightness^N250^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^SuseCustomColor^b^t^Score^T^Sdebug^b^t^SenableButtonYChanges^B^ScurrencyModuleEnabled^B^SartBackground^T^SverticalSize^N100^Spoint^SCENTER^SxOffset^N0^SyOffset^N0^ShorizontalSize^N100^ScropHorizontalAmount^N0^Stexture^Sart_northrend.tga^SmaintainArtAspectRatio^B^SmaintainMaskAspectRatio^B^ScropHorizontally^b^Salpha^N1^Sdesaturate^b^Sscale^N1^SmaskShape^Salpha_fade_soft_circular.tga^Senable^b^ScropVertically^b^SuseEdgeFade^b^SuseTint^b^ScropVerticalAmount^N0^StintColor^T^Sb^N1^Sg^N1^Sr^N1^t^t^ScurrencyTexture^T^StileSpacing^N0^Sscale^N1^SrowHeightOffset^N0^StextureXOffset^N-12^SleftBreakPct^N5^Stexture^Scurrency_blizzard_modern.tga^SyOffset^N0^SmatchHolderFrameWidth^B^StextureYOffset^N0^Suse3Slice^B^SedgeSize^N10^SuseTiling^B^SrightBreakPct^N95^StileOffset^N0^SuseVerticalTiling^B^Salpha^N1^Swidth^N100^SxOffset^N0^SwidthModifier^N100^SwidthAdjustment^N0^Senable^B^Sheight^N30^StextureAnchor^SCENTER^SpreserveAspectRatio^B^SautoFitHeight^B^t^SsearchBar^T^Sdebug^b^t^SmainTextures^T^Sdebug^b^t^SinventoryBackgroundAdjust^T^Scolor^T^Sb^N0.1^Sg^N0.1^Sr^N0.1^t^SenableColor^B^Sdebug^b^Sopacity^N0.78^t^SreverseCurrencyGrowth^B^Scurrency^T^Sdebug^b^t^Ssettings^T^Sdebug^b^t^Sborders^T^Sminimap^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N9^Ssize^N24^t^Selements^T^Sminimap^b^Scleanup^B^SframeHeight^B^SsearchBar^B^SvendorGrays^B^Sstack^B^StoggleBars^B^SmainFrame^B^t^SsearchBar^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N5^Ssize^N14^t^Sbuttons^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N4^Ssize^N14^t^Senable^B^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Sstyle^Swowui^SmainFrame^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N6^Ssize^N16^t^t^SbindText^T^Sdebug^b^t^ScurrencyTopPadding^N34^SinventorySlots^T^Senable^B^SglobalBrightness^N100^StextureAlpha^N1^SemptySlotColorIntensity^T^Sunassigned^N100^Sassigned^N100^t^SseparateEmptyBorder^B^SuserModifiedScale^b^SemptySlotAlphaAssigned^N0.6^SemptySlotTextureAlpha^N1^SscaleFactor^N104^SemptySlotColor^T^Sb^N1^Sg^N1^Sr^N1^t^SemptySlotBrightness^T^Sunassigned^N100^Sassigned^N100^t^SpoorQualityColor^T^Sb^N0.55^Sg^N0.55^Sr^N0.55^t^ScolorEmptySlotsByAssignment^B^SglobalScaleFactor^N1.04^Sdebug^b^Spreset^Sblizzard_modern^SshowCommonQualityBorders^B^SglobalColorIntensity^N100^SqualityColorIntensity^T^N1^N100^N2^N100^N3^N100^N4^N100^N5^N100^N6^N100^N7^N100^N0^N100^t^SqualityBrightness^T^N1^N100^N2^N100^N3^N100^N4^N100^N5^N100^N6^N100^N7^N100^N0^N100^t^SshowIndividualBrightness^b^SuseMainBorderForAssignedEmpty^B^Sstyle^SRounded^SshowIndividualColorIntensity^b^SshowPoorQualityBorders^B^ScommonQualityColor^T^Sb^N0.85^Sg^N0.85^Sr^N0.85^t^SdisableElvUIHighlight^B^SemptySlotOpacity^N1^t^SresourceManager^T^Sdebug^b^t^SgoldAnchorPosition^SBOTTOM_RIGHT_BELOW^ShideDefaultBorders^B^SframeHeight^T^Senable^B^Sdebug^b^SbagSpacing^N35^t^Scustom2PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^Scurrencies^T^Sdebug^b^t^StopTexture^T^StileSpacing^N0^Sscale^N1^SyOffset^N37^SleftBreakPct^N10^SmanualDimensions^b^Stexture^Stop_blizzard_modern.tga^SedgeSize^N24^StextureHeight^N42^Salpha^N1^StileOffset^N0^SxOffset^N0^SrightBreakPct^N95^StextureWidth^N435^SwidthAdjust^N4^Sheight^N30^Senable^B^SuseTiling^B^SuseSlice^B^t^SmiscBorders^T^Sdebug^b^t^SgoldTextXOffset^N0^ScurrencyPaddingSize^N30^SuiBackground^T^SyOffset^N0^Spoint^SCENTER^SxOffset^N0^Senable^b^Sscale^N1^Salpha^N1^Stexture^Sui_custom1.tga^t^SupdateSystem^T^Sdebug^b^t^SmiscTextures^T^Sdebug^b^t^SimportExportDialog^T^Sdebug^b^t^SsearchBarBackdrop^T^ShideBorder^B^SstackButtonYOffset^N20.5^Senable^B^Scolor^T^Sb^N0.1^Sg^N0.1^Sr^N0.1^t^Salpha^N0.7^SyOffset^N21^t^ScloseButtonTexture^T^Senable^B^Salpha^N1^StextureXOffset^N0^SbuttonScale^N1.5^StextureYOffset^N0^SanchorToFrameHeight^B^SbuttonXOffset^N7^SbuttonYOffset^N6^Sscale^N1.5^Stexture^Sclose_blizzard_modern.tga^t^SfixGoldTextStrata^B^t^Sversion^S2.2^t^^",
+		["ElvUI Rounded"] =
+		"BCTHEME:^1^T^Sname^SElvUI^Ssettings^T^Scustom1PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^SgoldTextTexture^T^StileSpacing^N0^Senable^B^Suse3Slice^B^SyOffset^N0^SanchorToHolderFrame^B^SleftBreakPct^N5^SautoHeight^B^SmatchHolderFrameWidth^B^SpreserveAspectRatio^b^Sscale^N1^SedgeSize^N10^SuseTiling^B^SholderFrameYOffset^N0^SrightBreakPct^N95^SwidthModifier^N0^Salpha^N1^StileOffset^N0^SxOffset^N0^Swidth^N100^SautoWidth^B^SholderFrameXOffset^N0^Sheight^N20^SheightAdjustment^N0^Stexture^Sgold_blizzard_modern.tga^SuseCustomColor^b^t^StextureHeightOffset^N-4^ScurrencyHorizontalPadding^N8^Scustom3PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^S_metadata^T^Screated^N1744350632^SexportTime^N1744350682^Sversion^S2.2^SuserName^SFrenir^t^ScustomTexture^T^Stexture^Sbackground.tga^SrepeatVertically^b^Spoint^SCENTER^Senable^b^SxOffset^N0^Sscale^N1^Salpha^N0.5^SyOffset^N0^t^SthemeManager^T^Sdebug^b^t^SgoldTextYOffset^N0^Senabled^B^Sdebug^b^SbindTextSettings^T^SapplyToWarbound^B^SapplyToBindOnEquip^B^SapplyToPoorQuality^b^Senable^b^Sbrightness^N250^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^SuseCustomColor^b^t^Score^T^Sdebug^b^t^SenableButtonYChanges^B^ScurrencyModuleEnabled^b^SartBackground^T^SverticalSize^N100^Spoint^SCENTER^SxOffset^N0^SyOffset^N0^ShorizontalSize^N100^ScropHorizontalAmount^N0^Stexture^Sart_northrend.tga^SmaintainArtAspectRatio^B^SmaintainMaskAspectRatio^B^ScropHorizontally^b^Salpha^N1^Sdesaturate^B^Sscale^N1^SmaskShape^Salpha_fade_soft_circular_large.tga^Senable^b^ScropVertically^b^SuseEdgeFade^B^SuseTint^b^ScropVerticalAmount^N0^StintColor^T^Sb^N1^Sg^N1^Sr^N1^t^t^ScurrencyTexture^T^StileSpacing^N0^Sscale^N1^SrowHeightOffset^N0^StextureXOffset^N-12^SleftBreakPct^N5^Stexture^Scurrency_blizzard_modern.tga^SyOffset^N0^SmatchHolderFrameWidth^B^StextureYOffset^N0^Suse3Slice^B^SedgeSize^N10^SuseTiling^B^SrightBreakPct^N95^StileOffset^N0^SuseVerticalTiling^B^Salpha^N1^Swidth^N100^SxOffset^N0^SwidthModifier^N100^SwidthAdjustment^N0^Senable^B^Sheight^N30^StextureAnchor^SCENTER^SpreserveAspectRatio^B^SautoFitHeight^B^t^SsearchBar^T^Sdebug^b^t^SmainTextures^T^Sdebug^b^t^SinventoryBackgroundAdjust^T^Scolor^T^Sb^N0.1^Sg^N0.1^Sr^N0.1^t^SenableColor^b^Sdebug^b^Sopacity^N0.78^t^SreverseCurrencyGrowth^B^Scurrency^T^Sdebug^b^t^Ssettings^T^Sdebug^b^t^Sborders^T^Sminimap^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N9^Ssize^N24^t^Selements^T^Sminimap^b^Scleanup^B^SframeHeight^B^SsearchBar^B^SvendorGrays^B^Sstack^B^StoggleBars^B^SmainFrame^B^t^SsearchBar^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N5^Ssize^N14^t^Sbuttons^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N4^Ssize^N14^t^Senable^b^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Sstyle^Swowui^SmainFrame^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N6^Ssize^N16^t^t^SbindText^T^Sdebug^b^t^ScurrencyTopPadding^N34^SinventorySlots^T^SemptySlotTextureAlpha^N1^SuserModifiedScale^b^ScommonQualityColor^T^Sb^N0.85^Sg^N0.85^Sr^N0.85^t^StextureAlpha^N1^SemptySlotColorIntensity^T^Sunassigned^N100^Sassigned^N100^t^SseparateEmptyBorder^B^SpoorQualityColor^T^Sb^N0.55^Sg^N0.55^Sr^N0.55^t^SemptySlotAlphaAssigned^N0.6^SglobalBrightness^N100^ScolorEmptySlotsByAssignment^B^SemptySlotColor^T^Sb^N1^Sg^N1^Sr^N1^t^SemptySlotBrightness^T^Sunassigned^N100^Sassigned^N100^t^SscaleFactor^N104^Sstyle^SRounded^SglobalScaleFactor^N1.04^Sdebug^b^SshowIndividualBrightness^b^SshowCommonQualityBorders^B^Spreset^Selvui_rounded_border_and_texture^SuseMainBorderForAssignedEmpty^B^SqualityBrightness^T^N1^N100^N2^N100^N3^N100^N4^N100^N5^N100^N6^N100^N7^N100^N0^N100^t^SqualityColorIntensity^T^N1^N100^N2^N100^N3^N100^N4^N100^N5^N100^N6^N100^N7^N100^N0^N100^t^SglobalColorIntensity^N100^SapplyMainBorderToEmptyAssigned^B^SshowIndividualColorIntensity^b^SshowPoorQualityBorders^B^Senable^B^SdisableElvUIHighlight^B^SemptySlotOpacity^N1^t^SresourceManager^T^Sdebug^b^t^SgoldAnchorPosition^SBOTTOM_RIGHT_BELOW^ShideDefaultBorders^B^SframeHeight^T^Senable^b^Sdebug^b^SbagSpacing^N35^t^Scustom2PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^Scurrencies^T^Sdebug^b^t^StopTexture^T^StileSpacing^N0^Sscale^N1^SyOffset^N37^SleftBreakPct^N10^SmanualDimensions^b^Stexture^Stop_blizzard_modern.tga^SedgeSize^N24^StextureHeight^N42^Salpha^N1^StileOffset^N0^SxOffset^N0^SrightBreakPct^N95^StextureWidth^N435^SwidthAdjust^N4^Sheight^N30^Senable^b^SuseTiling^B^SuseSlice^B^t^SmiscBorders^T^Sdebug^b^t^SgoldTextXOffset^N0^ScurrencyPaddingSize^N30^SuiBackground^T^SyOffset^N0^Spoint^SCENTER^SxOffset^N0^Senable^b^Sscale^N1^Salpha^N1^Stexture^Sui_custom1.tga^t^SupdateSystem^T^Sdebug^b^t^SmiscTextures^T^Sdebug^b^t^SimportExportDialog^T^Sdebug^b^t^SsearchBarBackdrop^T^ShideBorder^B^SstackButtonYOffset^N20.5^Senable^b^Scolor^T^Sb^N0.1^Sg^N0.1^Sr^N0.1^t^Salpha^N0.7^SyOffset^N21^t^ScloseButtonTexture^T^Senable^b^Salpha^N1^StextureXOffset^N0^SbuttonScale^N1.5^StextureYOffset^N0^SanchorToFrameHeight^B^SbuttonXOffset^N7^SbuttonYOffset^N6^Sscale^N1.5^Stexture^Sclose_blizzard_modern.tga^t^SfixGoldTextStrata^B^t^Sversion^S2.2^t^^",
+		["Northrend"] =
+		"BCTHEME:^1^T^Sname^SNorth^Ssettings^T^Scustom1PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^SgoldTextTexture^T^StileSpacing^N0^Senable^B^Suse3Slice^B^SyOffset^N0^SanchorToHolderFrame^B^SleftBreakPct^N5^SautoHeight^B^SmatchHolderFrameWidth^B^SpreserveAspectRatio^b^Sscale^N1^SedgeSize^N10^SuseTiling^B^SholderFrameYOffset^N0^SrightBreakPct^N95^SwidthModifier^N0^Salpha^N1^StileOffset^N0^SxOffset^N0^Swidth^N100^SautoWidth^B^SholderFrameXOffset^N0^Sheight^N20^SheightAdjustment^N0^Stexture^Sgold_blizzard_modern.tga^SuseCustomColor^b^t^StextureHeightOffset^N-4^ScurrencyHorizontalPadding^N8^Scustom3PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^S_metadata^T^Screated^N1744350646^SexportTime^N1744350701^Sversion^S2.2^SuserName^SFrenir^t^ScustomTexture^T^Stexture^Sbackground.tga^SrepeatVertically^b^Spoint^SCENTER^Senable^b^SxOffset^N0^Sscale^N1^Salpha^N0.5^SyOffset^N0^t^SthemeManager^T^Sdebug^b^t^SgoldTextYOffset^N0^Senabled^B^Sdebug^b^SbindTextSettings^T^SapplyToWarbound^B^SapplyToBindOnEquip^B^SapplyToPoorQuality^b^Senable^B^Sbrightness^N250^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^SuseCustomColor^b^t^Score^T^Sdebug^b^t^SenableButtonYChanges^B^ScurrencyModuleEnabled^B^SartBackground^T^SverticalSize^N100^Spoint^SCENTER^SxOffset^N0^SyOffset^N0^ShorizontalSize^N100^ScropHorizontalAmount^N0^Stexture^Sart_northrend.tga^SmaintainArtAspectRatio^B^SmaintainMaskAspectRatio^B^ScropHorizontally^b^Salpha^N1^Sdesaturate^B^Sscale^N1^SmaskShape^Salpha_fade_soft_circular_large.tga^Senable^B^ScropVertically^b^SuseEdgeFade^B^SuseTint^b^ScropVerticalAmount^N0^StintColor^T^Sb^N1^Sg^N1^Sr^N1^t^t^ScurrencyTexture^T^StileSpacing^N0^Sscale^N1^SrowHeightOffset^N0^StextureXOffset^N-12^SleftBreakPct^N5^Stexture^Scurrency_blizzard_modern.tga^SyOffset^N0^SmatchHolderFrameWidth^B^StextureYOffset^N0^Suse3Slice^B^SedgeSize^N10^SuseTiling^B^SrightBreakPct^N95^StileOffset^N0^SuseVerticalTiling^B^Salpha^N1^Swidth^N100^SxOffset^N0^SwidthModifier^N100^SwidthAdjustment^N0^Senable^B^Sheight^N30^StextureAnchor^SCENTER^SpreserveAspectRatio^B^SautoFitHeight^B^t^SsearchBar^T^Sdebug^b^t^SmainTextures^T^Sdebug^b^t^SinventoryBackgroundAdjust^T^Scolor^T^Sb^N0.1^Sg^N0.1^Sr^N0.1^t^SenableColor^B^Sdebug^b^Sopacity^N0.78^t^SreverseCurrencyGrowth^B^Scurrency^T^Sdebug^b^t^Ssettings^T^Sdebug^b^t^Sborders^T^Sminimap^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N9^Ssize^N24^t^Selements^T^Sminimap^b^Scleanup^B^SframeHeight^B^SsearchBar^B^SvendorGrays^B^Sstack^B^StoggleBars^B^SmainFrame^B^t^SsearchBar^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N5^Ssize^N14^t^Sbuttons^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N4^Ssize^N14^t^Senable^B^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Sstyle^Swowui^SmainFrame^T^Sstyle^Swowui^Scolor^T^Sb^N1^Sg^N1^Sr^N1^t^Salpha^N1^Sinset^N6^Ssize^N16^t^t^SbindText^T^Sdebug^b^t^ScurrencyTopPadding^N34^SinventorySlots^T^Senable^B^SglobalBrightness^N100^StextureAlpha^N1^SemptySlotColorIntensity^T^Sunassigned^N100^Sassigned^N100^t^SseparateEmptyBorder^B^SuserModifiedScale^b^SemptySlotAlphaAssigned^N0.6^SemptySlotTextureAlpha^N0.4^SscaleFactor^N104^SemptySlotColor^T^Sb^N1^Sg^N1^Sr^N1^t^SemptySlotBrightness^T^Sunassigned^N100^Sassigned^N100^t^SpoorQualityColor^T^Sb^N0.55^Sg^N0.55^Sr^N0.55^t^ScolorEmptySlotsByAssignment^B^SglobalScaleFactor^N1.04^Sdebug^b^Spreset^Sblizzard_modern^SshowCommonQualityBorders^B^SglobalColorIntensity^N100^SqualityColorIntensity^T^N1^N100^N2^N100^N3^N100^N4^N100^N5^N100^N6^N100^N7^N100^N0^N100^t^SqualityBrightness^T^N1^N100^N2^N100^N3^N100^N4^N100^N5^N100^N6^N100^N7^N100^N0^N100^t^SshowIndividualBrightness^b^SuseMainBorderForAssignedEmpty^B^Sstyle^SRounded^SshowIndividualColorIntensity^b^SshowPoorQualityBorders^B^ScommonQualityColor^T^Sb^N0.85^Sg^N0.85^Sr^N0.85^t^SdisableElvUIHighlight^B^SemptySlotOpacity^N1^t^SresourceManager^T^Sdebug^b^t^SgoldAnchorPosition^SBOTTOM_RIGHT_BELOW^ShideDefaultBorders^B^SframeHeight^T^Senable^B^Sdebug^b^SbagSpacing^N35^t^Scustom2PresetSettings^T^SglobalScaleFactor^N1^SapplyMainBorderToEmptyAssigned^b^SscaleFactor^N100^SdisableElvUIHighlight^b^SseparateEmptyBorder^b^t^Scurrencies^T^Sdebug^b^t^StopTexture^T^StileSpacing^N0^Sscale^N1^SyOffset^N37^SleftBreakPct^N10^SmanualDimensions^b^Stexture^Stop_blizzard_modern.tga^SedgeSize^N24^StextureHeight^N42^Salpha^N1^StileOffset^N0^SxOffset^N0^SrightBreakPct^N95^StextureWidth^N435^SwidthAdjust^N4^Sheight^N30^Senable^B^SuseTiling^B^SuseSlice^B^t^SmiscBorders^T^Sdebug^b^t^SgoldTextXOffset^N0^ScurrencyPaddingSize^N30^SuiBackground^T^SyOffset^N0^Spoint^SCENTER^SxOffset^N0^Senable^b^Sscale^N1^Salpha^N1^Stexture^Sui_custom1.tga^t^SupdateSystem^T^Sdebug^b^t^SmiscTextures^T^Sdebug^b^t^SimportExportDialog^T^Sdebug^b^t^SsearchBarBackdrop^T^ShideBorder^B^SstackButtonYOffset^N20.5^Senable^B^Scolor^T^Sb^N0.1^Sg^N0.1^Sr^N0.1^t^Salpha^N0.7^SyOffset^N21^t^ScloseButtonTexture^T^Senable^B^Salpha^N1^StextureXOffset^N0^SbuttonScale^N1.5^StextureYOffset^N0^SanchorToFrameHeight^B^SbuttonXOffset^N7^SbuttonYOffset^N6^Sscale^N1.5^Stexture^Sclose_blizzard_modern.tga^t^SfixGoldTextStrata^B^t^Sversion^S2.2^t^^",
+		--	["Sleek"] = "BCTHEME:YourSleekThemeImportString",
 	}
 	-- Synchronize theme data from ElvUI DB to our DB
 	self:SyncThemeData()
@@ -252,6 +253,26 @@ function ThemeManager:SaveTheme(themeName, allowOverwrite)
 		print("|cff1784d1Bag Customizer for ElvUI:|r Theme '" .. finalThemeName .. "' saved.")
 	end
 
+	-- Force update empty slot appearances if we're applying the theme
+	if addon.LoadThemeOnImport then
+		local invSlotsModule = addon:GetCachedModule("inventorySlots")
+		if invSlotsModule then
+			C_Timer.After(0.2, function()
+				if invSlotsModule.CollectAssignedBags then
+					invSlotsModule:CollectAssignedBags(true)
+				end
+
+				if invSlotsModule.UpdateAllEmptySlotTextures then
+					invSlotsModule:UpdateAllEmptySlotTextures()
+				end
+
+				if invSlotsModule.UpdateAllColorSettings then
+					invSlotsModule:UpdateAllColorSettings()
+				end
+			end)
+		end
+	end
+
 	return true, finalThemeName
 end
 
@@ -315,26 +336,26 @@ function ThemeManager:LoadTheme(themeName)
 		return false
 	end
 
-	-- <<< ADD EXPLICIT CLEANUP OF TARGET MODULES *BEFORE* APPLYING >>>
-	debug("LoadTheme: Running pre-emptive cleanup for relevant modules.")
+	-- Store current settings to detect changes later
+	local oldSettings = {}
+	if E.db.bagCustomizer and E.db.bagCustomizer.inventorySlots then
+		oldSettings = CopyTable(E.db.bagCustomizer.inventorySlots)
+	end
+
+	-- Cleanup modules before applying new theme
+	debug("LoadTheme: Cleaning up modules")
 	local CT_Module = addon:GetCachedModule("currencyAndTextures")
 	if CT_Module and CT_Module.Cleanup then
-		debug("LoadTheme: Cleaning up currencyAndTextures...")
-		-- Use pcall for safety in case Cleanup errors
 		local success, err = pcall(function() CT_Module:Cleanup() end)
 		if not success then debug("LoadTheme: Error during currencyAndTextures Cleanup: " .. tostring(err)) end
 	end
 
-	-- Add cleanup calls for other modules affected by themes if necessary
-	-- e.g., local SearchBar_Module = addon:GetCachedModule("searchBar")
-	--      if SearchBar_Module and SearchBar_Module.ResetAll then ... end
-	-- <<< END ADDED CLEANUP CODE >>>
 	-- Remove metadata before applying
 	if themeSettings._metadata then
 		themeSettings._metadata = nil
 	end
 
-	-- Ensure the settings are complete before applying by merging onto defaults
+	-- Ensure the settings are complete by merging onto defaults
 	local newSettings = {} -- Start fresh
 	if addon and addon.defaults then
 		addon:EnsureSettings(addon.defaults, newSettings)
@@ -344,67 +365,161 @@ function ThemeManager:LoadTheme(themeName)
 		debug("WARNING: addon.defaults not found, theme settings might be incomplete.")
 	end
 
-	-- Apply the potentially merged settings to the database
+	-- Apply the settings to the database
 	E.db.bagCustomizer = themeSettings
-	-- Ensure required settings (like borders.elements) exist after applying
+	-- Ensure required settings exist
 	self:EnsureRequiredSettings()
 	debug("LoadTheme: Settings applied to DB.")
-	-- NOTE: Immediate calls remain commented out.
-	-- -- Direct update to ElvUI bag frames
-	-- self:DirectUpdateBagFrames()
-	-- -- Notify modules about the theme change
-	-- self:NotifyModulesOfThemeChange()
-	-- Schedule the main UI update via a timer to allow frames to settle
+	-- Cancel any existing update timer
 	if addon._themeUpdateTimer then
 		debug("LoadTheme: Cancelling previous theme update timer.")
 		addon._themeUpdateTimer:Cancel()
 		addon._themeUpdateTimer = nil
 	end
 
-	local themeNameToUse = actualThemeName                    -- Capture for timer callback
-	addon._themeUpdateTimer = C_Timer.NewTimer(0.1, function() -- 0.1 sec delay
-		debug("Theme Update Timer Fired: Calling addon:Update for " .. themeNameToUse)
-		if addon and addon.Update then
-			local invSlotsModule = addon:GetCachedModule("inventorySlots")
-			if invSlotsModule and invSlotsModule.ResetForForcedUpdate then
-				debug("Theme Update Timer Fired (LoadTheme): Calling InventorySlots:ResetForForcedUpdate()")
+	-- Schedule the update sequence
+	local themeNameToUse = actualThemeName
+	addon._themeUpdateTimer = C_Timer.NewTimer(0.1, function()
+		debug("LoadTheme: Starting update sequence for theme '" .. themeNameToUse .. "'")
+		-- PHASE 1: Reset state and trigger main update
+		local invSlotsModule = addon:GetCachedModule("inventorySlots")
+		if invSlotsModule then
+			if invSlotsModule.ResetForForcedUpdate then
+				debug("Phase 1: Resetting inventory slots state")
 				invSlotsModule:ResetForForcedUpdate()
-			else
-				debug("Theme Update Timer Fired (LoadTheme): WARNING - Could not get InventorySlots module to reset state.")
 			end
 
-			-- This Update call will trigger ExecuteUpdate which calls the Apply... functions
+			-- Capture key settings for comparison
+			local borderSettingsChanged = false
+			if oldSettings.separateEmptyBorder ~= E.db.bagCustomizer.inventorySlots.separateEmptyBorder or
+					oldSettings.applyMainBorderToEmptyAssigned ~= E.db.bagCustomizer.inventorySlots.applyMainBorderToEmptyAssigned then
+				debug("Phase 1: Border settings have changed!")
+				borderSettingsChanged = true
+			end
+
+			-- Force complete texture cache invalidation if border settings changed
+			if borderSettingsChanged and invSlotsModule.InvalidateTextureCache then
+				debug("Phase 1: Invalidating all texture caches due to border setting changes")
+				invSlotsModule:InvalidateTextureCache() -- Full invalidation
+			end
+		end
+
+		if addon.Update then
+			debug("Phase 1: Triggering main addon update")
 			addon:Update("LoadTheme: " .. themeNameToUse, true)
-			-- First, try calling it directly on the main addon (if it exists there as a stub)
-			if addon.ApplyMinimapBorder then
-				addon:ApplyMinimapBorder()
-			else
-				-- Otherwise, get the UpdateSystem module using GetCachedModule
-				local updateSystemModule = addon:GetCachedModule("updateSystem") -- Get the module
-				if updateSystemModule and updateSystemModule.ApplyMinimapBorder then
-					updateSystemModule:ApplyMinimapBorder()                    -- Call the function ON the module object
-				else
-					debug("ERROR: Could not find ApplyMinimapBorder function on addon or UpdateSystem module!")
+		end
+
+		-- PHASE 2: Specific updates for inventory slots
+		C_Timer.After(0.05, function()
+			if not invSlotsModule then return end
+
+			debug("Phase 2: Performing specialized inventory slot updates")
+			-- Force-refresh assigned bags cache
+			if invSlotsModule.CollectAssignedBags then
+				debug("Phase 2: Refreshing assigned bags cache")
+				invSlotsModule:CollectAssignedBags(true)
+			end
+
+			-- Force scale factor updates if module is available
+			if invSlotsModule.UpdateAllScaleFactors then
+				debug("Phase 2: Updating all scale factors")
+				invSlotsModule:UpdateAllScaleFactors()
+			end
+
+			-- Update empty slot textures
+			if invSlotsModule.UpdateAllEmptySlotTextures then
+				debug("Phase 2: Updating all empty slot textures")
+				invSlotsModule:UpdateAllEmptySlotTextures()
+			end
+
+			-- Update color settings
+			if invSlotsModule.UpdateAllColorSettings then
+				debug("Phase 2: Updating all color settings")
+				invSlotsModule:UpdateAllColorSettings()
+			end
+		end)
+		-- PHASE 3: Direct border updates for empty slots - crucial for the empty slot border option
+		C_Timer.After(0.15, function()
+			if not invSlotsModule then return end
+
+			debug("Phase 3: Direct empty slot border update")
+			-- Update each empty slot's border directly
+			local count = 0
+			for button in pairs(invSlotsModule.processedSlots or {}) do
+				if button and button._BCZ and not button.hasItem then
+					-- Skip bank slots and similar
+					local bagID = button.bagID
+					if not bagID and button:GetParent() and button:GetParent():GetID() then
+						bagID = button:GetParent():GetID()
+					end
+
+					if not (bagID and invSlotsModule:IsBankBag(bagID)) and
+							not (button:GetParent() and invSlotsModule:IsBankFrame(button:GetParent())) then
+						-- Get assigned status
+						local isAssigned = button._BCZ_isAssignedBag or false
+						local settings = E.db.bagCustomizer.inventorySlots
+						-- Get the current button textures
+						local currentTextures = invSlotsModule.GetButtonTextures and invSlotsModule.GetButtonTextures() or {}
+						-- Determine which border texture to use
+						local borderTextureToUse = currentTextures.Border -- Default
+						if settings.applyMainBorderToEmptyAssigned and isAssigned then
+							borderTextureToUse = currentTextures.Border
+						elseif settings.separateEmptyBorder then
+							borderTextureToUse = currentTextures.EmptyBorder or currentTextures.Border
+						end
+
+						-- Apply border texture directly to buttons
+						if button._BCZ.borderTexture then
+							button._BCZ.borderTexture:SetTexture(borderTextureToUse)
+							count = count + 1
+						end
+
+						-- Force an update of the slot
+						button._BCZ_forceUpdate = true
+						if invSlotsModule.UpdateSlot then
+							invSlotsModule:UpdateSlot(button)
+						end
+					end
 				end
 			end
 
-			-- Call UpdateSettings to ensure hooks/state are correct for the *new* theme
-			if CT_Module and CT_Module.UpdateSettings then
-				debug("Theme Update Timer Fired: Calling currencyAndTextures:UpdateSettings()")
-				local success, err = pcall(function() CT_Module:UpdateSettings() end)
-				if not success then debug("Theme Update Timer Fired: Error during CT:UpdateSettings: " .. tostring(err)) end
+			debug("Phase 3: Updated " .. count .. " empty slot borders directly")
+			-- Save current settings for future comparison
+			if invSlotsModule.SaveCurrentSettings then
+				invSlotsModule:SaveCurrentSettings()
 			end
+		end)
+		-- PHASE 4: Final batch update after all other updates
+		C_Timer.After(0.25, function()
+			if not invSlotsModule then return end
 
-			-- Add calls to UpdateSettings or similar refresh functions for other affected modules if needed
-			-- <<< END ADDED REFRESH CODE >>>
+			debug("Phase 4: Final batch update")
+			if invSlotsModule.BatchUpdateButtons then
+				invSlotsModule:BatchUpdateButtons(true)
+			end
+		end)
+		-- Apply minimap border
+		if addon.ApplyMinimapBorder then
+			addon:ApplyMinimapBorder()
 		else
-			debug("Theme Update Timer Fired - addon or addon:Update not found!")
+			local updateSystemModule = addon:GetCachedModule("updateSystem")
+			if updateSystemModule and updateSystemModule.ApplyMinimapBorder then
+				updateSystemModule:ApplyMinimapBorder()
+			end
 		end
 
-		addon._themeUpdateTimer = nil -- Clear the handle after execution
+		-- Update texture settings
+		if CT_Module and CT_Module.UpdateSettings then
+			debug("Final phase: Updating currency textures")
+			local success, err = pcall(function() CT_Module:UpdateSettings() end)
+			if not success then debug("Error during CT:UpdateSettings: " .. tostring(err)) end
+		end
+
+		addon._themeUpdateTimer = nil
 	end)
+	-- Confirmation
 	if addon._themeUpdateTimer then
-		debug("LoadTheme: Update timer scheduled successfully.")
+		debug("LoadTheme: Update timer scheduled successfully")
 	else
 		debug("LoadTheme: ERROR - Update timer failed to schedule!")
 	end
@@ -412,7 +527,6 @@ function ThemeManager:LoadTheme(themeName)
 	-- Hide any confirmation popups
 	StaticPopup_Hide("BagCustomizer_for_ElvUI_LOAD_THEME_CONFIRM")
 	StaticPopup_Hide("BCZE_LOAD_THEME_CONFIRM")
-	debug("LoadTheme: Skipped potentially interfering immediate calls.")
 	print("|cff1784d1Bag Customizer for ElvUI:|r Theme '" .. actualThemeName .. "' loaded.")
 	return true
 end
@@ -844,6 +958,24 @@ function ThemeManager:ImportSettings(importString)
 	self:NotifyModulesOfThemeChange()
 	-- Clean up memory
 	collectgarbage("step", 200)
+	-- Force update empty slot appearances
+	local invSlotsModule = addon:GetCachedModule("inventorySlots")
+	if invSlotsModule then
+		C_Timer.After(0.2, function()
+			if invSlotsModule.CollectAssignedBags then
+				invSlotsModule:CollectAssignedBags(true)
+			end
+
+			if invSlotsModule.UpdateAllEmptySlotTextures then
+				invSlotsModule:UpdateAllEmptySlotTextures()
+			end
+
+			if invSlotsModule.UpdateAllColorSettings then
+				invSlotsModule:UpdateAllColorSettings()
+			end
+		end)
+	end
+
 	return true
 end
 
@@ -1036,7 +1168,6 @@ function ThemeManager:ResetAllSettings()
 
 	-- Clear ThemeManager caches
 	self:ClearCaches()
-	-- <<< Call RevertAllSlots directly HERE >>>
 	local invSlotsModule = addon:GetCachedModule("inventorySlots")
 	if invSlotsModule and invSlotsModule.RevertAllSlots then
 		debug("ResetAllSettings: Calling InventorySlots:RevertAllSlots() to remove custom skins.")
@@ -1045,7 +1176,6 @@ function ThemeManager:ResetAllSettings()
 		debug("ResetAllSettings: WARNING - Could not get InventorySlots module to revert slots.")
 	end
 
-	-- <<< END CHANGE >>>
 	-- Direct update to ElvUI bag frames (Keep this - ElvUI might need its own state reset)
 	self:DirectUpdateBagFrames()
 	-- Schedule the addon:Update to re-apply the *default* skin settings
@@ -1060,6 +1190,40 @@ function ThemeManager:ResetAllSettings()
 			-- The addon:Update call will now trigger InventorySlots update,
 			-- which will re-skin the reverted slots using the default DB settings.
 			addon:Update("ResetAllSettings", true)
+			-- Explicitly handle scale factors and empty slot appearances
+			local invSlotsModule = addon:GetCachedModule("inventorySlots")
+			if invSlotsModule then
+				C_Timer.After(0.1, function()
+					-- Apply scale factors first
+					if invSlotsModule.ApplyPresetScaleFactor then
+						debug("ResetAllSettings: Applying preset scale factor")
+						invSlotsModule:ApplyPresetScaleFactor()
+					end
+
+					if invSlotsModule.UpdateAllScaleFactors then
+						debug("ResetAllSettings: Updating all scale factors")
+						invSlotsModule:UpdateAllScaleFactors()
+					end
+
+					-- Refresh the assigned bags with force flag
+					if invSlotsModule.CollectAssignedBags then
+						debug("ResetAllSettings: Forcing assigned bags refresh")
+						invSlotsModule:CollectAssignedBags(true)
+					end
+
+					-- Update empty slot appearances
+					if invSlotsModule.UpdateAllEmptySlotTextures then
+						debug("ResetAllSettings: Updating all empty slot textures")
+						invSlotsModule:UpdateAllEmptySlotTextures()
+					end
+
+					-- Make sure all buttons get updated
+					if invSlotsModule.BatchUpdateButtons then
+						debug("ResetAllSettings: Force updating all buttons")
+						invSlotsModule:BatchUpdateButtons(true)
+					end
+				end)
+			end
 		else
 			debug("Theme Update Timer (from ResetAllSettings) - addon or addon:Update not found!")
 		end

@@ -2281,6 +2281,12 @@ function currencyAndTextures:RevertGoldTextTexture(frame)
 end
 
 function currencyAndTextures:CleanupCloseButton(frame)
+	if addon and addon._skipCloseButtonCleanup then -- MODIFIED LINE (Check addon object)
+		print("miscTextures", "CleanupCloseButton: Skipping cleanup due to addon flag.")
+		addon._skipCloseButtonCleanup = false        -- Reset the flag on the addon object
+		return                                       -- Exit without cleaning up
+	end
+
 	if not frame then
 		return
 	end
@@ -2979,22 +2985,70 @@ function currencyAndTextures:Cleanup()
 	debug("currency", "Cleaning up CurrencyAndTextures module")
 	self:UnhookAll()
 	self:ResetGoldText()
-	-- Release textures properly using the shared resource system
-	for ownerKey, textures in pairs(self.activeTextures) do
-		for key, texture in pairs(textures) do
-			if texture then
-				addon:ReleaseTexture(texture)
+	-- Release textures, conditionally skipping close button ones
+	local ownersToClean = {}
+	-- Safter iteration: collect keys first
+	for ownerKey in pairs(self.activeTextures) do
+		table.insert(ownersToClean, ownerKey)
+	end
+
+	local flagWasCheckedAndTrue = false -- Keep track if we actually skipped something
+	for _, ownerKey in ipairs(ownersToClean) do
+		local texturesToClean = {}
+		if self.activeTextures[ownerKey] then -- Check owner still exists
+			-- Collect keys for safer iteration
+			for key in pairs(self.activeTextures[ownerKey]) do
+				table.insert(texturesToClean, key)
+			end
+
+			for _, key in ipairs(texturesToClean) do
+				local texture = self.activeTextures[ownerKey] and self.activeTextures[ownerKey][key]
+				if texture then
+					local shouldReleaseAndRemove = true
+					-- Check if we should skip releasing AND removing this specific texture
+					if addon and addon._skipCloseButtonCleanup and (key == "closeButtonOverlay" or key == "closeButtonGlow") then
+						debug("currency", "Cleanup: Skipping release AND removal of texture key '" .. key .. "' due to addon flag.")
+						shouldReleaseAndRemove = false
+						flagWasCheckedAndTrue = true -- Mark that we used the flag
+					end
+
+					if shouldReleaseAndRemove then
+						-- Release the texture if not skipping
+						pcall(addon.ReleaseTexture, addon, texture)
+						-- Remove from tracking ONLY if released/removed
+						if self.activeTextures[ownerKey] then
+							self.activeTextures[ownerKey][key] = nil
+						end
+
+						-- else: If skipping, DO NOT release and DO NOT remove from tracking
+						-- This leaves the texture object potentially active and still tracked
+					end
+				end
+			end
+
+			-- Clean up owner entry if now empty AFTER processing all its textures
+			if self.activeTextures[ownerKey] and next(self.activeTextures[ownerKey]) == nil then
+				self.activeTextures[ownerKey] = nil
 			end
 		end
 	end
 
-	self.activeTextures = {}
+	-- If the flag was set and used, we need to ensure the full CleanupCloseButton logic
+	-- (resetting position, etc.) doesn't run accidentally later if the settings *did* change.
+	-- However, if the flag was *intended* to be used (because settings are same),
+	-- but wasn't actually encountered in the loop (e.g., textures weren't active for some reason),
+	-- we still need to reset the flag.
+	-- Therefore, reset the flag unconditionally *after* the loop is done checking it.
+	if addon and addon._skipCloseButtonCleanup then
+		debug("currency", "Cleanup: Resetting skip flag post-loop.")
+		addon._skipCloseButtonCleanup = false
+	end
+
 	-- Rest of cleanup
 	isHooked = false
 	originalLayout = nil
 	inUpdate = false
 	currentDimensions = {}
-	-- Notify memory system to run collection
 	if addon.CleanupMemory then
 		addon:CleanupMemory(true)
 	end

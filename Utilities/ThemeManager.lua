@@ -342,6 +342,21 @@ function ThemeManager:LoadTheme(themeName)
 		oldSettings = CopyTable(E.db.bagCustomizer.inventorySlots)
 	end
 
+	-- Check if Close Button settings are identical and enabled in both current DB and incoming theme
+	local skipCloseButtonCleanup = false
+	local currentCloseButtonSettings = E.db.bagCustomizer and E.db.bagCustomizer.closeButtonTexture
+	local incomingCloseButtonSettings = themeSettings.closeButtonTexture -- Get from the theme settings table
+	if currentCloseButtonSettings and incomingCloseButtonSettings and
+			currentCloseButtonSettings.enable and incomingCloseButtonSettings.enable and
+			currentCloseButtonSettings.texture == incomingCloseButtonSettings.texture then
+		print("LoadTheme: Close Button settings are identical and enabled. Flagging cleanup skip.")
+		skipCloseButtonCleanup = true
+		-- Set a temporary flag on the MAIN ADDON object
+		addon._skipCloseButtonCleanup = true -- MODIFIED LINE
+	else
+		addon._skipCloseButtonCleanup = false -- MODIFIED LINE (Ensure flag is false oth
+	end
+
 	-- Cleanup modules before applying new theme
 	debug("LoadTheme: Cleaning up modules")
 	local CT_Module = addon:GetCachedModule("currencyAndTextures")
@@ -756,11 +771,11 @@ function ThemeManager:ImportTheme(importString, newName)
 		local droppedSettings = self:DetectDroppedSettings(originalSettings, themeData.settings)
 		if droppedSettings.count > 0 then
 			debug(droppedSettings.count .. " settings dropped during import")
-			print("|cff1784d1Bag Customizer for ElvUI:|r " .. droppedSettings.count ..
-				" settings were ignored because they're not supported in the current version.")
+			--	print("|cff1784d1Bag Customizer for ElvUI:|r " .. droppedSettings.count ..
+			--		" settings were ignored because they're not supported in the current version.")
 			if #droppedSettings.examples > 0 then
-				print("|cff1784d1Bag Customizer for ElvUI:|r Examples: " ..
-					table.concat(droppedSettings.examples, ", "))
+				--		print("|cff1784d1Bag Customizer for ElvUI:|r Examples: " ..
+				--			table.concat(droppedSettings.examples, ", "))
 			end
 		end
 	end

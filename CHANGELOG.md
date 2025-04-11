@@ -1,4 +1,4 @@
-## 1.0.2
+## 1.0.2 - 2025-04-11
 Fixed typo in texture name
 Fixed default settings for currency texture height offset
 

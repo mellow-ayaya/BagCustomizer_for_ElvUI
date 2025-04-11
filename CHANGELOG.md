@@ -1,3 +1,7 @@
+## 1.0.2
+Fixed typo in texture name
+Fixed default settings for currency texture height offset
+
 ## 1.0.1 - 2025-04-11
 Fixed a few issues with importing/resetting themes not applying all Inventory Slots settings
 Reorganized debug settings

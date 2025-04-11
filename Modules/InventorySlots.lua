@@ -169,7 +169,7 @@ local function GetButtonTextures()
 		Highlight = baseTextures.Highlight,
 		Empty = baseTextures.Empty,
 		EmptyBorder = baseTextures.EmptyBorder or baseTextures.Border, -- Default to the same as Border
-		ScaleFactor = baseTextures.ScaleFactor or 100,               -- Get scale factor from preset
+		ScaleFactor = baseTextures.ScaleFactor or 104,               -- Get scale factor from preset
 	}
 	-- Apply any custom component selections that exist
 	if settings.BorderStyle and availableTextures.Border[settings.BorderStyle] then
@@ -1383,7 +1383,7 @@ function module:ApplyPresetScaleFactor()
 	-- Only apply preset scale factor if the user hasn't manually changed it
 	if not settings.userModifiedScale then
 		-- Get scale factor from preset or use default
-		local scaleFactor = baseTextures.ScaleFactor or 100
+		local scaleFactor = baseTextures.ScaleFactor or 104
 		-- Update settings
 		settings.scaleFactor = scaleFactor
 		settings.globalScaleFactor = scaleFactor / 100
@@ -2625,10 +2625,72 @@ function module:UpdateAllHighlights()
 	end
 end
 
--- Also add this method for UpdateHighlightState which might be called from options
+-- Method for UpdateHighlightState which might be called from options
 function module:UpdateHighlightState()
 	debug("InventorySlots: Updating highlight state")
 	self:UpdateAllHighlights()
+end
+
+function module:UpdateEmptySlotBorderStyles()
+	debug("InventorySlots: Explicitly updating empty slot border styles")
+	-- First, invalidate relevant texture caches
+	self:InvalidateTextureCache("BorderStyle")
+	self:InvalidateTextureCache("EmptyBorderStyle")
+	-- Force refresh of assigned bags
+	self:CollectAssignedBags(true)
+	-- Then directly update all empty slots
+	local count = 0
+	for button in pairs(processedSlots) do
+		if button and button._BCZ and not button.hasItem then
+			-- Skip bank slots
+			local bagID = button.bagID
+			if not bagID and button:GetParent() and button:GetParent():GetID() then
+				bagID = button:GetParent():GetID()
+			end
+
+			-- Skip if this is a bank bag
+			if bagID and self:IsBankBag(bagID) then
+				return
+			end
+
+			-- Skip if button is in a bank frame
+			if button:GetParent() and self:IsBankFrame(button:GetParent()) then
+				return
+			end
+
+			-- For empty slots, explicitly update border textures
+			if button._BCZ.borderTexture then
+				local settings = E.db.bagCustomizer.inventorySlots
+				local currentTextures = GetButtonTextures()
+				-- Determine assigned status
+				local assignedBags = self:CollectAssignedBags(false)
+				local isAssigned = false
+				if bagID then
+					local filterType = assignedBags[bagID]
+					isAssigned = filterType ~= nil and filterType ~= ""
+					button._BCZ_isAssignedBag = isAssigned
+					button._BCZ_assignmentType = isAssigned and filterType or nil
+				end
+
+				-- Explicitly determine border texture based on current settings
+				local borderTextureToUse = currentTextures.Border -- Default
+				if settings.applyMainBorderToEmptyAssigned and isAssigned then
+					borderTextureToUse = currentTextures.Border
+				elseif settings.separateEmptyBorder then
+					borderTextureToUse = currentTextures.EmptyBorder
+				end
+
+				-- Force apply the border texture
+				button._BCZ.borderTexture:SetTexture(borderTextureToUse)
+				-- Force update to ensure color is correct too
+				button._BCZ_forceUpdate = true
+				self:UpdateSlot(button)
+				count = count + 1
+			end
+		end
+	end
+
+	debug("InventorySlots: Updated border styles for " .. count .. " empty slot buttons")
 end
 
 -- Clear the color cache

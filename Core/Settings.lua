@@ -597,8 +597,8 @@ addon.textureOptions = {
 
 	-- Gold text Textures (sharing same set as currency)
 	goldtext = {
-		["gold_blizzard_modern.tga"] = "Blizzard Currency Modern",
-		["gold_blizzard_classic.tga"] = "Blizzard Currency Classic",
+		["gold_blizzard_modern.tga"] = "Blizzard Gold Modern",
+		["gold_blizzard_classic.tga"] = "Blizzard Gold Classic",
 		--	["gold_cataclysm.tga"] = "Cataclysm Gold",
 		--	["gold_northrend.tga"] = "Northrend Gold",
 		["gold_custom1.tga"] = "Custom Gold 1",

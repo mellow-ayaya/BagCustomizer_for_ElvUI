@@ -265,7 +265,7 @@ function currencyAndTextures:CalculateDimensions()
 	end
 
 	-- Calculate the height for the gold text background texture
-	local goldTextureOffset = E.db.bagCustomizer.textureHeightOffset or 6
+	local goldTextureOffset = E.db.bagCustomizer.textureHeightOffset or -4
 	currentDimensions.goldTextureHeight = currentDimensions.rowHeight + goldTextureOffset
 	-- Return the dimensions table (without numCurrencyRows)
 	return currentDimensions
@@ -1279,7 +1279,7 @@ function currencyAndTextures:ApplyCurrencyFrameTexture(frame)
 		local numRows = currentNumRows
 		local rowHeightOffset = settings.rowHeightOffset or 0
 		local contentHeightBasis = 0
-		local globalHeightOffset = E.db.bagCustomizer.textureHeightOffset or 6
+		local globalHeightOffset = E.db.bagCustomizer.textureHeightOffset or -4
 		if isSpecialMode then
 			-- Special handling for CO and BCTG modes
 			if currentFrameHeight > 0 then

@@ -1834,7 +1834,7 @@ local function CreatGeneralCurrencySettingsOptions()
 					return not E.db.bagCustomizer.currencyModuleEnabled
 				end,
 				get = function()
-					return E.db.bagCustomizer.textureHeightOffset or 6
+					return E.db.bagCustomizer.textureHeightOffset or -4
 				end,
 				set = function(_, value)
 					E.db.bagCustomizer.textureHeightOffset = value

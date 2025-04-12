@@ -3299,7 +3299,7 @@ local function CreateInventorySlotsMainOptions()
 						-- For regular presets, apply all preset settings
 						local inventorySlots = addon.elements.inventorySlots
 						local presetData = inventorySlots.presetComponentMap[value]
-						local presetScale = presetData and presetData.ScaleFactor or 104
+						local presetScale = presetData and presetData.ScaleFactor or 100
 						settings.scaleFactor = presetScale
 						settings.globalScaleFactor = presetScale / 100
 						if presetData then
@@ -3899,8 +3899,8 @@ local function CreateInventorySlotsMainOptions()
 					local preset = settings.preset or "blizzard_modern"
 					local inventorySlots = addon.elements.inventorySlots
 					local presetScale = inventorySlots.presetComponentMap[preset] and
-							inventorySlots.presetComponentMap[preset].ScaleFactor or 104
-					local currentScale = settings.scaleFactor or 104
+							inventorySlots.presetComponentMap[preset].ScaleFactor or 100
+					local currentScale = settings.scaleFactor or 100
 					if currentScale ~= presetScale then
 						return "|cFFFF5500Scale Factor (Modified)|cFF00BBFF*|r"
 					end
@@ -3919,7 +3919,7 @@ local function CreateInventorySlotsMainOptions()
 				end,
 				get = function()
 					return E.db.bagCustomizer.inventorySlots and
-							E.db.bagCustomizer.inventorySlots.scaleFactor or 104
+							E.db.bagCustomizer.inventorySlots.scaleFactor or 100
 				end,
 				set = function(_, value)
 					if not E.db.bagCustomizer.inventorySlots then
@@ -3934,7 +3934,7 @@ local function CreateInventorySlotsMainOptions()
 					local preset = E.db.bagCustomizer.inventorySlots.preset or "blizzard_modern"
 					local inventorySlots = addon.elements.inventorySlots
 					local presetScale = inventorySlots.presetComponentMap[preset] and
-							inventorySlots.presetComponentMap[preset].ScaleFactor or 104
+							inventorySlots.presetComponentMap[preset].ScaleFactor or 100
 					local wasCustomized = E.db.bagCustomizer.inventorySlots.isCustomized
 					E.db.bagCustomizer.inventorySlots.isCustomized = wasCustomized or
 							(value ~= presetScale)
@@ -3969,8 +3969,8 @@ local function CreateInventorySlotsMainOptions()
 						return true
 					end
 
-					local presetScale = presetData.ScaleFactor or 104
-					local currentScale = settings.scaleFactor or 104
+					local presetScale = presetData.ScaleFactor or 100
+					local currentScale = settings.scaleFactor or 100
 					local scaleModified = currentScale ~= presetScale
 					-- Check if any of the new toggle options differ from preset defaults
 					local highlightModified = settings.disableElvUIHighlight ~= (presetData.disableElvUIHighlight or false)
@@ -3996,7 +3996,7 @@ local function CreateInventorySlotsMainOptions()
 					local inventorySlots = addon.elements.inventorySlots
 					local presetData = inventorySlots.presetComponentMap[preset]
 					-- Reset scale factor to preset's default
-					local presetScale = presetData and presetData.ScaleFactor or 104
+					local presetScale = presetData and presetData.ScaleFactor or 100
 					settings.scaleFactor = presetScale
 					settings.globalScaleFactor = presetScale / 100
 					-- Reset the three toggle options to preset defaults

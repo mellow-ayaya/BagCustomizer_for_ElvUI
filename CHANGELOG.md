@@ -1,6 +1,10 @@
+## 1.0.6 - 2025-04-12
+Adjusted Scaling for Inventory Slots to take into account the ElvUI bag slots spacing, this should improve the accuracy of the scaling and require less manual adjustments from users with different settings
+Adjusted default and preset Scale for Inventory Slots to match with the adjustments
+
 ## 1.0.5 - 2025-04-12
-Fixed module loading order.
-Added better ElvUI Profile switch handling.
+Fixed module loading order
+Added better ElvUI Profile switch handling
 
 ## 1.0.4 - 2025-04-11
 Added /bcfe command that opens the addon's settings

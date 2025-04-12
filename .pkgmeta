@@ -1,0 +1,13 @@
+# Basic .pkgmeta file
+package-as: BagCustomizer_for_ElvUI  # Replace with your addon's folder name
+
+# Use this to provide a custom changelog instead of commit messages
+manual-changelog: CHANGELOG.txt
+
+# Optional: Release type control with tag naming
+# Your current tag "v1.0.6" will be marked as "Release"
+# Use "v1.0.6-beta" for Beta or "v1.0.6-alpha" for Alpha
+
+# Optional: Ignore files you don't want packaged
+ignore:
+  - README.md

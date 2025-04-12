@@ -3,7 +3,7 @@
 ## IconTexture: Interface\AddOns\BagCustomizer_for_ElvUI\Media\icon.tga
 ## Notes: Customizes the appearance of ElvUI bags
 ## Author: mellow_ayaya
-## Version: 1.0.5
+## Version: 1.0.6
 ## RequiredDeps: ElvUI
 ## DefaultState: enabled
 ## SavedVariables: BagCustomizer_for_ElvUIDB

@@ -169,7 +169,7 @@ local function GetButtonTextures()
 		Highlight = baseTextures.Highlight,
 		Empty = baseTextures.Empty,
 		EmptyBorder = baseTextures.EmptyBorder or baseTextures.Border, -- Default to the same as Border
-		ScaleFactor = baseTextures.ScaleFactor or 104,               -- Get scale factor from preset
+		ScaleFactor = baseTextures.ScaleFactor or 100,               -- Get scale factor from preset
 	}
 	-- Apply any custom component selections that exist
 	if settings.BorderStyle and availableTextures.Border[settings.BorderStyle] then
@@ -1292,36 +1292,41 @@ function module:ApplyScaleToButton(button)
 	local settings = E.db.bagCustomizer.inventorySlots
 	if not settings then return end
 
+	-- Get base scale factor
 	local scaleFactor = settings.globalScaleFactor or 1.0
-	-- Scale the button art frame
+	-- Add the correct button spacing to the effective scale factor
+	local spacing = (E.db.bags.bagButtonSpacing or 2) - 1     -- This is the correct path!
+	local effectiveScaleFactor = scaleFactor + (spacing / 100) -- Convert spacing to decimal
+	print("Applying scale: base=" .. tostring(scaleFactor) ..
+		", spacing=" .. tostring(spacing) ..
+		", effective=" .. tostring(effectiveScaleFactor))
+	-- Scale the button art frame using the EFFECTIVE scale factor
 	if button._BCZ.buttonArt then
 		button._BCZ.buttonArt:ClearAllPoints()
 		button._BCZ.buttonArt:SetPoint("CENTER", button, "CENTER", 0, 0)
 		local width, height = button:GetWidth(), button:GetHeight()
-		button._BCZ.buttonArt:SetSize(width * scaleFactor, height * scaleFactor)
+		button._BCZ.buttonArt:SetSize(width * effectiveScaleFactor, height * effectiveScaleFactor)
 	end
 
-	-- Scale the border frame
+	-- Apply the same effective scale to other components
 	if button._BCZ.borderFrame then
 		button._BCZ.borderFrame:ClearAllPoints()
 		button._BCZ.borderFrame:SetPoint("CENTER", button, "CENTER", 0, 0)
 		local width, height = button:GetWidth(), button:GetHeight()
-		button._BCZ.borderFrame:SetSize(width * scaleFactor, height * scaleFactor)
+		button._BCZ.borderFrame:SetSize(width * effectiveScaleFactor, height * effectiveScaleFactor)
 	end
 
-	-- Scale the icon container
 	if button._BCZ.iconContainer then
 		button._BCZ.iconContainer:ClearAllPoints()
 		button._BCZ.iconContainer:SetPoint("CENTER", button, "CENTER", 0, 0)
-		button._BCZ.iconContainer:SetSize(button:GetWidth() * scaleFactor, button:GetHeight() * scaleFactor)
-		-- Update mask texture
+		button._BCZ.iconContainer:SetSize(button:GetWidth() * effectiveScaleFactor, button:GetHeight() * effectiveScaleFactor)
 		if button._BCZ.iconMask then
 			local currentTextures = GetButtonTextures()
 			button._BCZ.iconMask:SetTexture(currentTextures.Normal)
 		end
 	end
 
-	-- Make sure all Textures fill their frames
+	-- Make sure all textures fill their frames
 	if button._BCZ.normalTexture then button._BCZ.normalTexture:SetAllPoints(button._BCZ.buttonArt) end
 
 	if button._BCZ.emptyTexture then button._BCZ.emptyTexture:SetAllPoints(button._BCZ.buttonArt) end
@@ -1383,7 +1388,7 @@ function module:ApplyPresetScaleFactor()
 	-- Only apply preset scale factor if the user hasn't manually changed it
 	if not settings.userModifiedScale then
 		-- Get scale factor from preset or use default
-		local scaleFactor = baseTextures.ScaleFactor or 104
+		local scaleFactor = baseTextures.ScaleFactor or 100
 		-- Update settings
 		settings.scaleFactor = scaleFactor
 		settings.globalScaleFactor = scaleFactor / 100

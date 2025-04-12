@@ -1297,7 +1297,7 @@ function module:ApplyScaleToButton(button)
 	-- Add the correct button spacing to the effective scale factor
 	local spacing = (E.db.bags.bagButtonSpacing or 2) - 1     -- This is the correct path!
 	local effectiveScaleFactor = scaleFactor + (spacing / 100) -- Convert spacing to decimal
-	print("Applying scale: base=" .. tostring(scaleFactor) ..
+	debug("Applying scale: base=" .. tostring(scaleFactor) ..
 		", spacing=" .. tostring(spacing) ..
 		", effective=" .. tostring(effectiveScaleFactor))
 	-- Scale the button art frame using the EFFECTIVE scale factor

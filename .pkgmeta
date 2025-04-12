@@ -2,7 +2,7 @@
 package-as: BagCustomizer_for_ElvUI  # Replace with your addon's folder name
 
 # Use this to provide a custom changelog instead of commit messages
-manual-changelog: CHANGELOG.txt
+manual-changelog: CHANGELOG.md
 
 # Optional: Release type control with tag naming
 # Your current tag "v1.0.6" will be marked as "Release"

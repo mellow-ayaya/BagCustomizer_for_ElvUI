@@ -1,7 +1,7 @@
 ### Bag Customizer for ElvUI
 
 Make your ElvUI bags look like the default WoW bags - or create your own awesome custom designs!
-
+<br><br>
 ![image4](https://media.forgecdn.net/attachments/1154/707/4.jpg "")
 
 ### About
@@ -15,22 +15,24 @@ Enjoy the default blizz-like theme, the rounded ElvUI theme or the Northrend the
 Here's what you can expect: a masque-like feature that allows reshaping the inventory slots and adding borders to them, being able to adjust the transparency of the bag window and add textures/background images, move the search bar and buttons, reposition the gold text and more!
 
 You can disable or enable each feature of the addon independently of each other.
-
+<br><br>
 
 ### Features
 
-- **Default WoW-like Theme**: Instantly transform your ElvUI bags to match the modern WoW bags look
-- **Multiple Preset Themes**: Choose from several ready-to-use visual styles
-- **Advanced Customization**: Fine-tune every aspect of your bags:
-  - Window backgrounds and textures
-  - Custom borders and item slots
-  - Gold display and currency frame styling
-  - Close button positioning and appearance
-  - Search bar and extra buttons
-- **Theme Manager**: Save and share your custom themes with others
-- **Component Toggling**: Enable/disable features independently
-- **Profile Support**: Export settings between ElvUI profiles
+Bag appearance features:
 
+- Window Body: Customize the Inventory background color, Top Texture, UI Texture (none by default) and Art Texture (none by default)
+- Layout: Customize the bag Close Button Texture, Close Button Position, Extra Bag Height, Search Bar and buttons settings
+- Item Slots: Change the look of the inventory slots and their borders
+- Gold & Currencies: Style and position gold display and currency frame
+- Borders: Add borders to various elements, disable the default ElvUI Bag borders
+
+Utility features:
+
+- Feature toggling: Each feature can be toggled on/off independently
+- Preset Themes: The addon comes with 3 presets (possibly more in the future), with "Blizzard Modern" preset enabled by default
+- Theme Manager: You can save, load, delete, export or import themes
+<br><br>
 
 ### Installation
 
@@ -38,7 +40,7 @@ You can disable or enable each feature of the addon independently of each other.
 2.  Extract the `BagCustomizer_for_ElvUI` folder into your `World of Warcraft\_retail_\Interface\AddOns\` directory
 3.  Restart World of Warcraft or Reload your UI (`/reload`)
 4.  Ensure both ElvUI and Bag Customizer for ElvUI are enabled in the AddOns list
-
+<br><br><br>
 
 ### Getting Started
 
@@ -46,15 +48,15 @@ You can disable or enable each feature of the addon independently of each other.
 2. **Explore More Themes**: Type /bcfe in chat and check out the "Themes and Profiles" tab for more pre-made designs
 3. **Customize Everything**: Use the "Advanced" tab to fine-tune specific elements
 4. **Save Your Creations**: Once you're happy with your settings, save them as a theme
-
+<br><br><br>
 
 ### Good to Know
 
-- For best results, have your bags open when applying themes or changing settings
+- To avoid needing to reload, have your bags open when applying themes or changing settings
 - Settings are stored in your ElvUI Profile - export them if you want to use across different profiles
-- The Bank and Warbank are not currently supported
-- Each component can be independently enabled/disabled
-
+- The Bank and Warbank are not supported
+- Each feature can be independently enabled/disabled
+<br><br>
 
 ### Recommended ElvUI Settings
 
@@ -65,7 +67,7 @@ For a more authentic default-bag look, consider these ElvUI settings:
 - Bags Button size 39~44
 - Bags Button spacing ~4
 - Item Count, Info, Level fonts: Arial Narrow or Friz Quadrata TT
-
+<br><br>
 
 ### Custom Files
 
@@ -73,29 +75,29 @@ Want to use your own textures? Add them to the appropriate folder in:
 `\Interface\AddOns\BagCustomizer_for_ElvUI\Media\`
 
 Each texture type has specific folder locations and recommended dimensions - check the addon's "Advanced" tab for full details.
-
+<br><br>
 
 ### Requirements
 
 - ElvUI
-
+<br><br>
 
 ### Known issues:
 
 - When switching ElvUI profiles, a reload will be needed to ensure the customizer works properrly
-
+<br><br>
 
 ### Need Help?
 
 If you have questions or run into issues, post in the Curseforge comments. For bug reports, please enable the relevant debugging option in the Debug tab first and provide relevant logs.
-
+<br><br>
 
 ### Disclaimer
 
 This addon contains modified UI textures from World of Warcraft (owned by Blizzard Entertainment) and ElvUI. These assets are used with the purpose of creating visual consistency with the original interfaces and remain the intellectual property of their respective owners. This addon is not affiliated with or endorsed by Blizzard Entertainment or the ElvUI team.
 
 World of Warcraft™ and Blizzard Entertainment® are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
-
+<br><br>
 
 ### License
 

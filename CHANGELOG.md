@@ -1,3 +1,7 @@
+# 1.0.8 - 2025-04-14
+- Fixed border strata for Inventory Slots being on top of elements like item quality
+- Lowered the Item slot text brightness for BoE & WuE items a bit as it was too strong in the default presets
+
 # 1.0.71 - 2025-04-12
 - Fixed debug spam (oops!)
 

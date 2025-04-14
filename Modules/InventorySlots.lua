@@ -1047,7 +1047,7 @@ function module:SkinButton(button)
 	-- 2. Create border frame (above everything else)
 	if not button._BCZ.borderFrame then
 		button._BCZ.borderFrame = CreateFrame("Frame", nil, button)
-		button._BCZ.borderFrame:SetFrameLevel(button:GetFrameLevel() + 15) -- Way above everything
+		button._BCZ.borderFrame:SetFrameLevel(button:GetFrameLevel() + 0) -- lowered from +15 to +2
 		button._BCZ.borderFrame:SetAllPoints()
 	end
 

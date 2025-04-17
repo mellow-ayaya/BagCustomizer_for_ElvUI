@@ -132,7 +132,7 @@ SlashCmdList["BAGCUSTOMIZERDEBUG"] = function() -- Match: BAGCUSTOMIZERDEBUG1
 		addon:DumpDebugSettings()
 	end
 end
-print("BC_DEBUG: Registered /bcdebug (Key: BAGCUSTOMIZERDEBUG1)") -- CONFIRMATION
+--print("BC_DEBUG: Registered /bcdebug (Key: BAGCUSTOMIZERDEBUG1)") -- CONFIRMATION
 -- Add a slash command to reset debug settings
 SLASH_BAGCUSTOMIZERRESET1 = "/bcreset"
 SlashCmdList["BAGCUSTOMIZERRESET"] = function() -- Match: BAGCUSTOMIZERRESET1
@@ -146,7 +146,7 @@ SlashCmdList["BAGCUSTOMIZERRESET"] = function() -- Match: BAGCUSTOMIZERRESET1
 		addon:ResetDebugSettings()
 	end
 end
-print("BC_DEBUG: Registered /bcreset (Key: BAGCUSTOMIZERRESET)") -- CONFIRMATION
+--print("BC_DEBUG: Registered /bcreset (Key: BAGCUSTOMIZERRESET)") -- CONFIRMATION
 -- ==========================================
 -- Event Bus System
 -- ==========================================

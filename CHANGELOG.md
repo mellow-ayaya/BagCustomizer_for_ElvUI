@@ -1,5 +1,5 @@
 # 1.0.8.1 - 2025-04-17
-- Small fix that removes debug slash commmands from showing in chat on login
+- Small fix that removes debug slash commands from showing in chat on login
 
 # 1.0.8 - 2025-04-14
 - Fixed border strata for Inventory Slots being on top of elements like item quality

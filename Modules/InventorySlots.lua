@@ -68,7 +68,7 @@ local function debug(msg)
 
 	-- Check if module-specific debug is enabled
 	if not E.db.bagCustomizer.inventorySlots or
-			not E.db.bagCustomizer.inventorySlots.debug then
+		not E.db.bagCustomizer.inventorySlots.debug then
 		return
 	end
 
@@ -169,7 +169,7 @@ local function GetButtonTextures()
 		Highlight = baseTextures.Highlight,
 		Empty = baseTextures.Empty,
 		EmptyBorder = baseTextures.EmptyBorder or baseTextures.Border, -- Default to the same as Border
-		ScaleFactor = baseTextures.ScaleFactor or 100,               -- Get scale factor from preset
+		ScaleFactor = baseTextures.ScaleFactor or 100,           -- Get scale factor from preset
 	}
 	-- Apply any custom component selections that exist
 	if settings.BorderStyle and availableTextures.Border[settings.BorderStyle] then
@@ -231,7 +231,7 @@ function module:CollectAssignedBags(forceRefresh)
 	-- Only use cache if it's recent and we're not forcing refresh
 	local currentTime = GetTime()
 	if not forceRefresh and assignedBagsCacheTime > 0 and
-			(currentTime - assignedBagsCacheTime) < CACHE_DURATION then
+		(currentTime - assignedBagsCacheTime) < CACHE_DURATION then
 		return assignedBagsCache
 	end
 
@@ -443,21 +443,21 @@ function module:GetAssignedBagColor(filterType)
 	local r, g, b = 1, 1, 1
 	-- For quest items
 	if type(filterType) == "string" and
-			(filterType == "QuestItems" or filterType == "Quest") then
+		(filterType == "QuestItems" or filterType == "Quest") then
 		if B.QuestColors and B.QuestColors.questItem then
 			return B.QuestColors.questItem.r, B.QuestColors.questItem.g,
-					B.QuestColors.questItem.b
+				B.QuestColors.questItem.b
 		end
 	end
 
 	-- For reagent bags
 	if type(filterType) == "string" and
-			(filterType == "Reagent" or filterType == "Reagents") then
+		(filterType == "Reagent" or filterType == "Reagents") then
 		if B.ProfessionColors and B.BagIndice and B.BagIndice.reagent then
 			local color = B.ProfessionColors[B.BagIndice.reagent]
 			if color then return color.r, color.g, color.b end
 		elseif E.db.bags.colors and E.db.bags.colors.profession and
-				E.db.bags.colors.profession.reagent then
+			E.db.bags.colors.profession.reagent then
 			local color = E.db.bags.colors.profession.reagent
 			return color.r, color.g, color.b
 		end
@@ -490,7 +490,7 @@ function module:GetAssignedBagColor(filterType)
 
 	-- Fall back to direct ElvUI colors
 	if type(filterType) == "string" and E.db.bags.colors and
-			E.db.bags.colors.assignment then
+		E.db.bags.colors.assignment then
 		local lowerFilter = filterType:lower()
 		for colorKey, colorValue in pairs(E.db.bags.colors.assignment) do
 			if lowerFilter == colorKey:lower() then
@@ -775,19 +775,19 @@ function module:HaveSettingsChanged()
 	local settings = E.db.bagCustomizer.inventorySlots
 	-- Check for enabled state changes
 	if lastEnabled ~= (E.db.bagCustomizer and E.db.bagCustomizer.enabled) or
-			lastModuleEnabled ~= settings.enable then
+		lastModuleEnabled ~= settings.enable then
 		return true
 	end
 
 	-- Check for style changes
 	if lastSettings.preset ~= settings.preset or
-			lastSettings.BorderStyle ~= settings.BorderStyle or
-			lastSettings.EmptyBorderStyle ~= settings.EmptyBorderStyle or
-			lastSettings.EmptyStyle ~= settings.EmptyStyle or
-			lastSettings.NormalStyle ~= settings.NormalStyle or
-			lastSettings.HighlightStyle ~= settings.HighlightStyle or
-			lastSettings.separateEmptyBorder ~= settings.separateEmptyBorder or
-			lastSettings.applyMainBorderToEmptyAssigned ~= settings.applyMainBorderToEmptyAssigned then
+		lastSettings.BorderStyle ~= settings.BorderStyle or
+		lastSettings.EmptyBorderStyle ~= settings.EmptyBorderStyle or
+		lastSettings.EmptyStyle ~= settings.EmptyStyle or
+		lastSettings.NormalStyle ~= settings.NormalStyle or
+		lastSettings.HighlightStyle ~= settings.HighlightStyle or
+		lastSettings.separateEmptyBorder ~= settings.separateEmptyBorder or
+		lastSettings.applyMainBorderToEmptyAssigned ~= settings.applyMainBorderToEmptyAssigned then
 		return true
 	end
 
@@ -850,7 +850,7 @@ function module:ApplyBrightnessToColor(r, g, b, button)
 	local quality = button.quality or button.rarity
 	-- First apply quality-specific brightness if available
 	if quality and settings.qualityBrightness and
-			settings.qualityBrightness[quality] ~= nil then
+		settings.qualityBrightness[quality] ~= nil then
 		local qualityBrightness = settings.qualityBrightness[quality]
 		local brightness = qualityBrightness / 100
 		-- Apply quality-specific brightness
@@ -861,7 +861,7 @@ function module:ApplyBrightnessToColor(r, g, b, button)
 
 	-- Apply quality-specific color intensity if available
 	if quality and settings.qualityColorIntensity and
-			settings.qualityColorIntensity[quality] ~= nil then
+		settings.qualityColorIntensity[quality] ~= nil then
 		local qualityIntensity = settings.qualityColorIntensity[quality]
 		if qualityIntensity > 100 then
 			local intensity = qualityIntensity / 100
@@ -987,7 +987,7 @@ function module:SkinButton(button)
 	local preset = settings.preset or "blizzard_modern"
 	-- Include the highlight setting in buttonState
 	local buttonState = style ..
-			"-" .. preset .. "-" .. (settings.disableElvUIHighlight and "noHighlight" or "highlight")
+		"-" .. preset .. "-" .. (settings.disableElvUIHighlight and "noHighlight" or "highlight")
 	-- Add style components to buttonState to detect individual style changes
 	if settings.BorderStyle then buttonState = buttonState .. "-b" .. settings.BorderStyle end
 
@@ -1001,9 +1001,9 @@ function module:SkinButton(button)
 
 	-- Only skip if not forcing update and already processed with current style
 	if not button._BCZ_forceUpdate and
-			processedSlots[button] == buttonState and
-			button._BCZ and
-			button._BCZ.lastPreset == preset then
+		processedSlots[button] == buttonState and
+		button._BCZ and
+		button._BCZ.lastPreset == preset then
 		return
 	end
 
@@ -1071,7 +1071,7 @@ function module:SkinButton(button)
 	end
 
 	button._BCZ.normalTexture:SetTexture(currentTextures.Normal)
-	button._BCZ.normalTexture:SetVertexColor(1, 1, 1, 1)                                     -- Keep vertex color at full
+	button._BCZ.normalTexture:SetVertexColor(1, 1, 1, 1)                                   -- Keep vertex color at full
 	button._BCZ.normalTexture:SetAlpha(E.db.bagCustomizer.inventorySlots.textureAlpha or 1.0) -- Apply global alpha
 	button._BCZ.normalTexture:Show()
 	-- 2. Empty slot texture (shows when slot is empty)
@@ -1091,7 +1091,7 @@ function module:SkinButton(button)
 
 	button._BCZ.borderTexture:SetTexture(currentTextures.Border)
 	button._BCZ.borderTexture:SetVertexColor(1, 1, 1, 1) -- Ensure full opacity
-	button._BCZ.borderTexture:Show()                    -- Show by default
+	button._BCZ.borderTexture:Show()                  -- Show by default
 	-- Get all texture regions in the button - Just the basic frame parts
 	local regions = {}
 	for _, regionName in ipairs(slotRegions) do
@@ -1124,7 +1124,7 @@ function module:SkinButton(button)
 		-- Hook mouse events for our custom highlight
 		button:HookScript("OnEnter", function()
 			if button._BCZ and button._BCZ.highlightTexture and
-					settings.disableElvUIHighlight then
+				settings.disableElvUIHighlight then
 				button._BCZ.highlightTexture:Show()
 			end
 		end)
@@ -1165,7 +1165,7 @@ function module:SkinButton(button)
 						alpha = 1 -- Show border only if option enabled
 						if settings.commonQualityColor then
 							r, g, b = settings.commonQualityColor.r, settings.commonQualityColor.g,
-									settings.commonQualityColor.b
+								settings.commonQualityColor.b
 						end
 					end
 
@@ -1295,7 +1295,7 @@ function module:ApplyScaleToButton(button)
 	-- Get base scale factor
 	local scaleFactor = settings.globalScaleFactor or 1.0
 	-- Add the correct button spacing to the effective scale factor
-	local spacing = (E.db.bags.bagButtonSpacing or 2) - 1     -- This is the correct path!
+	local spacing = (E.db.bags.bagButtonSpacing or 2) - 1   -- This is the correct path!
 	local effectiveScaleFactor = scaleFactor + (spacing / 100) -- Convert spacing to decimal
 	debug("Applying scale: base=" .. tostring(scaleFactor) ..
 		", spacing=" .. tostring(spacing) ..
@@ -1319,7 +1319,8 @@ function module:ApplyScaleToButton(button)
 	if button._BCZ.iconContainer then
 		button._BCZ.iconContainer:ClearAllPoints()
 		button._BCZ.iconContainer:SetPoint("CENTER", button, "CENTER", 0, 0)
-		button._BCZ.iconContainer:SetSize(button:GetWidth() * effectiveScaleFactor, button:GetHeight() * effectiveScaleFactor)
+		button._BCZ.iconContainer:SetSize(button:GetWidth() * effectiveScaleFactor,
+			button:GetHeight() * effectiveScaleFactor)
 		if button._BCZ.iconMask then
 			local currentTextures = GetButtonTextures()
 			button._BCZ.iconMask:SetTexture(currentTextures.Normal)
@@ -1425,7 +1426,7 @@ function module:IsSlotVisible(slot)
 	-- Check if we have a recent visibility result cached
 	local currentTime = GetTime()
 	if slot._BCZ and slot._BCZ.lastVisibilityCheck and
-			(currentTime - slot._BCZ.lastVisibilityCheck) < 0.25 then
+		(currentTime - slot._BCZ.lastVisibilityCheck) < 0.25 then
 		return slot._BCZ.isVisible
 	end
 
@@ -1469,7 +1470,7 @@ function module:IsSlotVisible(slot)
 
 	local screenWidth, screenHeight = GetScreenWidth(), GetScreenHeight()
 	if (left + width < 0 or left > screenWidth or
-				bottom + height < 0 or bottom > screenHeight) then
+			bottom + height < 0 or bottom > screenHeight) then
 		-- Cache the result
 		visibilityCache[slot] = false
 		if slot._BCZ then
@@ -1531,7 +1532,7 @@ function module:IsSlotVisible(slot)
 
 	local buffer = 50
 	local isVisible = (slotBottom < frameTop + scrollOffset + buffer) and
-			(slotTop > frameTop + scrollOffset - viewHeight - buffer)
+		(slotTop > frameTop + scrollOffset - viewHeight - buffer)
 	-- Cache the result
 	visibilityCache[slot] = isVisible
 	if slot._BCZ then
@@ -1568,7 +1569,7 @@ function module:UpdateSlot(button)
 	local state = hasItem and "filled" or "empty"
 	-- OPTIMIZATION: Improved throttling with higher thresholds
 	if not button._BCZ_forceUpdate and button._BCZ.lastUpdateTime and
-			button._BCZ.state == state then
+		button._BCZ.state == state then
 		local now = GetTime()
 		-- Use a larger throttle window (150ms instead of 120ms)
 		if now - button._BCZ.lastUpdateTime < 0.15 then
@@ -1580,9 +1581,9 @@ function module:UpdateSlot(button)
 
 				-- Skip if colors are similar (higher threshold of 0.04)
 				if button._BCZ.lastBorderR and
-						math.abs(r - button._BCZ.lastBorderR) < 0.04 and
-						math.abs(g - button._BCZ.lastBorderG) < 0.04 and
-						math.abs(b - button._BCZ.lastBorderB) < 0.04 then
+					math.abs(r - button._BCZ.lastBorderR) < 0.04 and
+					math.abs(g - button._BCZ.lastBorderG) < 0.04 and
+					math.abs(b - button._BCZ.lastBorderB) < 0.04 then
 					return
 				end
 			else
@@ -1677,7 +1678,7 @@ function module:UpdateSlot(button)
 						alpha = 1 -- Show border only if option enabled
 						if settings.commonQualityColor then
 							r, g, b = settings.commonQualityColor.r, settings.commonQualityColor.g,
-									settings.commonQualityColor.b
+								settings.commonQualityColor.b
 						end
 					end
 
@@ -1729,7 +1730,7 @@ function module:UpdateSlot(button)
 
 		-- Determine which border texture to use for the empty slot
 		if button._BCZ.borderTexture then
-			local borderTextureToUse = currentTextures.Border  -- Default to the main border texture
+			local borderTextureToUse = currentTextures.Border -- Default to the main border texture
 			local isAssigned = button._BCZ_isAssignedBag or false -- Get assigned status determined below
 			-- Check the NEW option first for assigned bags
 			if settings.applyMainBorderToEmptyAssigned and isAssigned then
@@ -1776,8 +1777,8 @@ function module:UpdateSlot(button)
 					if settings.emptySlotColor then
 						-- Get color values, apply brightness, then set the color
 						local r, g, b = settings.emptySlotColor.r or 1.0,
-								settings.emptySlotColor.g or 1.0,
-								settings.emptySlotColor.b or 1.0
+							settings.emptySlotColor.g or 1.0,
+							settings.emptySlotColor.b or 1.0
 						-- Apply brightness adjustment for unassigned empty slots
 						r, g, b = self:ApplyEmptySlotBrightness(r, g, b, false)
 						button._BCZ.borderTexture:SetVertexColor(r, g, b, settings.emptySlotOpacity or 1)
@@ -1801,8 +1802,8 @@ function module:UpdateSlot(button)
 				if settings.emptySlotColor then
 					-- Get color values, apply brightness, then set the color
 					local r, g, b = settings.emptySlotColor.r or 1.0,
-							settings.emptySlotColor.g or 1.0,
-							settings.emptySlotColor.b or 1.0
+						settings.emptySlotColor.g or 1.0,
+						settings.emptySlotColor.b or 1.0
 					-- Apply brightness adjustment for unassigned empty slots
 					r, g, b = self:ApplyEmptySlotBrightness(r, g, b, false)
 					button._BCZ.borderTexture:SetVertexColor(r, g, b, settings.emptySlotOpacity or 1)
@@ -2032,7 +2033,7 @@ function module:RevertSlot(button)
 	end
 
 	-- Properly restore ElvUI highlight system
-	button:SetHighlightTexture("")                    -- Clear any existing highlight
+	button:SetHighlightTexture("")                  -- Clear any existing highlight
 	local hlProps = self:GetElvUIHighlightProperties() -- Get ElvUI properties
 	button:SetHighlightTexture(hlProps.texture)
 	local highTex = button:GetHighlightTexture()
@@ -2118,7 +2119,7 @@ function module:ResetCache()
 	assignedBagsCache = {}
 	assignedBagsCacheTime = 0
 	extractedElvUIHighlight = nil -- Reset highlight cache too
-	colorCache = {}              -- Reset color cache too
+	colorCache = {}            -- Reset color cache too
 	-- OPTIMIZATION: Only selectively clear texture cache
 	self:InvalidateTextureCache()
 	-- OPTIMIZATION: Use batch update system instead of direct updates
@@ -2224,7 +2225,7 @@ function module:CheckSettingsChanged()
 		-- Handle enable/disable toggle specifically
 		local isEnabled = E.db.bagCustomizer and E.db.bagCustomizer.enabled
 		local isModuleEnabled = isEnabled and E.db.bagCustomizer.inventorySlots and
-				E.db.bagCustomizer.inventorySlots.enable
+			E.db.bagCustomizer.inventorySlots.enable
 		if (lastEnabled ~= isEnabled) or (lastModuleEnabled ~= isModuleEnabled) then
 			-- Handle module toggle
 			self:ToggleState()
@@ -2249,9 +2250,9 @@ function module:CheckSettingsChanged()
 			end
 
 			if lastSettings.BorderStyle ~= settings.BorderStyle or
-					lastSettings.EmptyBorderStyle ~= settings.EmptyBorderStyle or
-					lastSettings.separateEmptyBorder ~= settings.separateEmptyBorder or
-					lastSettings.applyMainBorderToEmptyAssigned ~= settings.applyMainBorderToEmptyAssigned then
+				lastSettings.EmptyBorderStyle ~= settings.EmptyBorderStyle or
+				lastSettings.separateEmptyBorder ~= settings.separateEmptyBorder or
+				lastSettings.applyMainBorderToEmptyAssigned ~= settings.applyMainBorderToEmptyAssigned then
 				-- Invalidate relevant caches if border settings changed
 				self:InvalidateTextureCache("BorderStyle")
 				self:InvalidateTextureCache("EmptyBorderStyle")
@@ -2470,29 +2471,58 @@ function module:SetupAssignmentHooks()
 	end
 
 	-- OPTIMIZATION: Consolidated event handlers
-	local function OnBagUpdate(bagID)
-		if not addon:IsAnyBagVisible() then return end
+	local function OnBagUpdate(bagID) -- 'self' here refers to 'module' due to closure capture
+		-- Handle cases where a specific player bag (0-4) is updated
+		if bagID and bagID >= 0 and bagID <= 4 then
+			if not addon:IsAnyBagVisible() then
+				-- Bags are closed, but an item in a specific bag changed.
+				-- We need to flag these slots for a forced update when bags are next opened.
+				local containerFrame = B.BagFrame -- ElvUI's main bag frame reference
+				if containerFrame and containerFrame.Bags and containerFrame.Bags[bagID] then
+					local numSlotsInBag = B:GetContainerNumSlots(bagID)
+					for slotID = 1, numSlotsInBag do
+						local slot = containerFrame.Bags[bagID][slotID]
+						if slot and slot._BCZ then -- If we've skinned this slot before
+							slot._BCZ_forceUpdate = true
+							-- Optionally, clear state to ensure UpdateSlot's internal throttling is also bypassed,
+							-- though _BCZ_forceUpdate should already handle the main throttle.
+							-- slot._BCZ.state = nil
+						end
+					end
+				end
+				return -- Exit: The actual update will occur when bags are opened and UpdateAll picks up the flags.
+			else
+				-- Bags are visible, and a specific player bag updated. Proceed with normal update.
+				if self:IsBankBag(bagID) then return end -- Should not happen for 0-4, but good practice.
+				C_Timer.After(0.05, function()
+					self:ForceUpdateBagBorders(bagID)
+				end)
+				return -- Handled this specific bag update.
+			end
+		end
 
-		-- Skip bank bags
+		-- Handle bank bags or general updates (no specific bagID, or bagID not in 0-4 range)
 		if bagID and self:IsBankBag(bagID) then
+			return -- Skip bank bags explicitly handled by ElvUI or not by this module.
+		end
+
+		-- For general updates (e.g., BAG_UPDATE_DELAYED, or non-player bagID that we aren't skipping)
+		-- If bags are still closed, generally do nothing until they open.
+		if not addon:IsAnyBagVisible() then
+			-- If it was a general update (no specific bagID), UpdateAll on open should catch it.
+			-- The _BCZ_forceUpdate flags set above will ensure specific changed slots are refreshed.
 			return
 		end
 
-		-- If specific bagID is provided, only update that bag
-		if bagID and bagID >= 0 and bagID <= 4 then
-			C_Timer.After(0.05, function()
-				self:ForceUpdateBagBorders(bagID)
+		-- Bags are visible, and it's a general update or a bagID we didn't handle above.
+		-- Queue a full update.
+		if not self.fullUpdateScheduled then
+			self.fullUpdateScheduled = true
+			C_Timer.After(0.2, function()
+				self.fullUpdateScheduled = false
+				self:ResetCache()
+				self:UpdateAll()
 			end)
-		else
-			-- Otherwise queue a full update with cache reset
-			if not self.fullUpdateScheduled then
-				self.fullUpdateScheduled = true
-				C_Timer.After(0.2, function()
-					self.fullUpdateScheduled = false
-					self:ResetCache()
-					self:UpdateAll()
-				end)
-			end
 		end
 	end
 
@@ -2556,7 +2586,7 @@ function module:SetupOptionsCallbacks()
 			debug("InventorySlots: Option changed: " .. (optionPath or "unknown"))
 			-- Special handling for scale options - apply immediately
 			if optionPath == "globalScaleFactor" or optionPath == "scaleFactor" or
-					optionPath:find("Scale") or optionPath:find("scale") then
+				optionPath:find("Scale") or optionPath:find("scale") then
 				debug("InventorySlots: Scale setting changed - applying immediately")
 				-- Force complete cache invalidation for scale changes
 				buttonTexturesCache = {}
@@ -2571,7 +2601,7 @@ function module:SetupOptionsCallbacks()
 			elseif optionPath:find("Style") then
 				self:InvalidateTextureCache(optionPath)
 			elseif optionPath:find("Color") or optionPath:find("Brightness") or
-					optionPath:find("Intensity") or optionPath:find("Opacity") then
+				optionPath:find("Intensity") or optionPath:find("Opacity") then
 				-- Just clear color cache for color-related settings
 				colorCache = {}
 			else
@@ -2726,7 +2756,7 @@ function module:ResetForForcedUpdate()
 			button._BCZ.lastBorderR = nil -- Clear cached border color
 			button._BCZ.lastBorderG = nil
 			button._BCZ.lastBorderB = nil
-			button._BCZ.lastFilterType = nil       -- Clear cached assignment
+			button._BCZ.lastFilterType = nil -- Clear cached assignment
 			button._BCZ.state = "needs_forced_update" -- Set a unique state to ensure comparison fails
 			count = count + 1
 		end
@@ -2804,7 +2834,7 @@ function module:Initialize()
 	-- First-time open detection (#3)
 	C_Timer.After(0.2, function()
 		if addon:IsAnyBagVisible() and addon.firstTimeOpens and
-				addon.firstTimeOpens.bags == false then
+			addon.firstTimeOpens.bags == false then
 			-- Bags already open when addon loaded
 			debug("InventorySlots: Detected bags already open - applying styles")
 			self:UpdateAll()

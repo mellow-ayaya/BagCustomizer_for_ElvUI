@@ -1,5 +1,6 @@
 # 1.0.9 - 2025-05-13
 - Fixed a bug that caused item borders to remain applied to empty slots after items are consumed or removed from the bags while the bags are closed
+- TOC push
 
 # 1.0.8.1 - 2025-04-17
 - Small fix that removes debug slash commands from showing in chat on login

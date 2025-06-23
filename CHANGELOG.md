@@ -1,3 +1,6 @@
+# 1.0.10 - 2025-06-23
+- TOC update
+
 # 1.0.9 - 2025-05-13
 - Fixed a bug that caused item borders to remain applied to empty slots after items are consumed or removed from the bags while the bags are closed
 - TOC push

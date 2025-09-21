@@ -1,4 +1,4 @@
--- ElvUI Bag Customizer - Update System
+-- ElvUI Bag Customizer - Update System (Targeted Fix - Disabled Currency Events)
 --
 -- This file handles all update logic, event handling, and customization rendering.
 local E, L, V, P, G = unpack(ElvUI)
@@ -14,16 +14,10 @@ local debugSuffix = "][UpdateSystem]:|r "
 local function debug(message)
 	if not E.db or not E.db.bagCustomizer then return end
 
-	-- Check if global debug is enabled
 	if not E.db.bagCustomizer.debug then return end
 
-	-- Check if module-specific debug is enabled
-	if not E.db.bagCustomizer.updateSystem or
-			not E.db.bagCustomizer.updateSystem.debug then
-		return
-	end
+	if not E.db.bagCustomizer.updateSystem or not E.db.bagCustomizer.updateSystem.debug then return end
 
-	-- Output the message with module name
 	local timestamp = date("%H:%M:%S")
 	print(debugPrefix .. timestamp .. debugSuffix .. tostring(message))
 end
@@ -35,22 +29,99 @@ local firstUpdateReasons = {
 	["FullUpdate"] = true,
 	["Initial update"] = true,
 }
+-- UNIFIED TIMER SYSTEM
+local unifiedUpdateTimer = nil
+local pendingUpdates = {}
+local lastUpdateTime = 0
+local UPDATE_DELAY = 0.4 -- Single delay for all updates (increased for 11.2 stability)
+-- Unified update handler
+local function ProcessUnifiedUpdate()
+	if not addon or not E.db or not E.db.bagCustomizer or not E.db.bagCustomizer.enabled then
+		unifiedUpdateTimer = nil
+		pendingUpdates = {}
+		return
+	end
+
+	debug("Processing unified update with " .. #pendingUpdates .. " pending reasons")
+	-- Determine if this should be an immediate update
+	local isImmediate = false
+	local isFirstUpdate = false
+	for _, updateData in ipairs(pendingUpdates) do
+		if updateData.immediate then
+			isImmediate = true
+		end
+
+		if firstUpdateReasons[updateData.reason] or (updateData.reason and (updateData.reason:find("first") or updateData.reason:find("Initial"))) then
+			isFirstUpdate = true
+		end
+	end
+
+	-- Execute the actual update
+	UpdateSystem:ExecuteUpdate("Unified: " .. (#pendingUpdates > 0 and pendingUpdates[1].reason or "unknown"), isImmediate,
+		isFirstUpdate)
+	-- Clear state
+	unifiedUpdateTimer = nil
+	pendingUpdates = {}
+	lastUpdateTime = GetTime()
+end
+
+-- Queue an update with the unified system
+local function QueueUpdate(reason, immediate)
+	local now = GetTime()
+	-- Skip if we just updated recently and this isn't urgent
+	if not immediate and (now - lastUpdateTime) < 0.1 then
+		debug("Skipping update due to recent update: " .. (reason or "unknown"))
+		return
+	end
+
+	-- Add to pending updates
+	table.insert(pendingUpdates, {
+		reason = reason or "unknown",
+		immediate = immediate or false,
+		timestamp = now,
+	})
+	-- Cancel existing timer
+	if unifiedUpdateTimer then
+		unifiedUpdateTimer:Cancel()
+	end
+
+	-- Create new timer
+	local delay = immediate and 0.1 or UPDATE_DELAY
+	unifiedUpdateTimer = C_Timer.NewTimer(delay, ProcessUnifiedUpdate)
+	debug("Queued update: " .. (reason or "unknown") .. (immediate and " (immediate)" or ""))
+end
+
 -- Make sure the module is properly initialized early
 function UpdateSystem:OnInitialize()
 	debug("Early initialization of UpdateSystem module")
-	-- Register all our functions to make them available to the core addon
 	self.lastUpdateTimes = {}
+	-- Initialize event throttling timers
+	self.lastLayoutTrigger = 0
+	self.lastBagUpdateEvent = 0
+	self.lastCooldownUpdate = 0
+	self.lastCurrencyUpdate = 0
+	self.lastCurrencyDimensionsUpdate = 0
+	self.lastItemLockChange = 0
+	-- Detect WoW version for optimal timing
+	local version = select(4, GetBuildInfo())
+	if version >= 110200 then
+		UPDATE_DELAY = 0.4 -- Longer delay for 11.2+
+		debug("Detected WoW 11.2+ - using extended delays")
+	else
+		UPDATE_DELAY = 0.2 -- Original delay for older versions
+		debug("Detected WoW <11.2 - using standard delays")
+	end
 end
 
--- COMBAT OPTIMIZATION FUNCTIONS --
+-- COMBAT OPTIMIZATION FUNCTIONS
 function UpdateSystem:OptimizeForCombat()
-	-- Enter combat mode
 	addon.inCombat = true
 	debug("Entered combat - optimizing performance")
 	-- Cancel any pending updates
-	if addon.updateTimer then
-		addon.updateTimer:Cancel()
-		addon.updateTimer = nil
+	if unifiedUpdateTimer then
+		unifiedUpdateTimer:Cancel()
+		unifiedUpdateTimer = nil
+		pendingUpdates = {}
 	end
 
 	-- Disable texture updates during combat unless bags are visible
@@ -71,26 +142,18 @@ function UpdateSystem:OptimizeForCombat()
 	addon:UnregisterEvent("CURSOR_CHANGED")
 	addon:UnregisterEvent("ITEM_PUSH")
 	addon:UnregisterEvent("BAG_UPDATE_DELAYED")
-	-- Disable any visual-only updates during combat
 	self.combatSuspended = true
-	-- Trigger combat event via event bus
 	addon:TriggerEvent("COMBAT_STARTED")
 end
 
 function UpdateSystem:RestoreFromCombat()
-	-- Exit combat mode
 	addon.inCombat = false
 	debug("Exited combat - restoring normal functionality")
-	-- Register all events in one batch with small separate delays
+	-- Register all events in one batch
 	self:RegisterCombatEvents()
-	-- Reset suspension flag
 	self.combatSuspended = false
-	-- Update if bags are visible after a small delay to ensure UI is stable
-	C_Timer.After(0.3, function()
-		if addon:IsAnyBagVisible() then
-			self:Update("Combat ended with bags open", false)
-		end
-	end)
+	-- Update if bags are visible after a delay to ensure UI is stable
+	QueueUpdate("Combat ended with bags open", false)
 	-- Re-enable texture updates
 	local MainTextures = addon:GetCachedModule("mainTextures")
 	if MainTextures then
@@ -103,111 +166,155 @@ function UpdateSystem:RestoreFromCombat()
 		if ResourceManager and ResourceManager.CleanupMemory then
 			ResourceManager:CleanupMemory(false)
 		else
-			-- Fallback to core method if ResourceManager isn't available
 			addon:CleanupMemory(false)
 		end
 	end)
-	-- Trigger combat event via event bus
 	addon:TriggerEvent("COMBAT_ENDED")
 end
 
--- Register combat events in one batch with small delays to avoid UI hitching
+-- Register combat events with unified timing
 function UpdateSystem:RegisterCombatEvents()
-	-- Register CURSOR_CHANGED after a small delay
-	C_Timer.After(0.1, function()
-		addon:RegisterEvent("CURSOR_CHANGED", function()
-			if addon.inCombat then return end
+	-- CURSOR_CHANGED with unified timer
+	addon:RegisterEvent("CURSOR_CHANGED", function()
+		if addon.inCombat then return end
 
-			if CursorHasItem() then
-				-- An item is being moved
-				if not self.cursorChangingItem then
-					self.cursorChangingItem = true
-					C_Timer.After(0.1, function()
-						self.cursorChangingItem = false
-						if addon:IsAnyBagVisible() then
-							self:Update("CURSOR_CHANGED - item being moved", false)
-						end
-					end)
-				end
-			else
-				-- Item was just placed somewhere
-				if not self.cursorChangedRecently then
-					self.cursorChangedRecently = true
-					C_Timer.After(0.1, function()
-						self.cursorChangedRecently = false
-						if addon:IsAnyBagVisible() then
-							self:Update("CURSOR_CHANGED - item placement", false)
-							-- Update slot borders after a short delay if needed
-							if addon.elements.inventorySlots and addon:IsAnyBagVisible() then
-								C_Timer.After(0.2, function()
-									addon.elements.inventorySlots:UpdateAll()
-								end)
-							end
-						end
-					end)
-				end
-			end
-		end)
-	end)
-	-- Register ITEM_PUSH after a small delay
-	C_Timer.After(0.15, function()
-		addon:RegisterEvent("ITEM_PUSH", function()
-			if addon.inCombat then return end
-
-			-- Use flag to prevent multiple simultaneous updates
-			if not self.itemPushProcessing then
-				self.itemPushProcessing = true
-				C_Timer.After(0.1, function()
-					if addon:IsAnyBagVisible() then
-						self:Update("ITEM_PUSH event", false)
-						-- Update slot borders after a delay if needed
-						C_Timer.After(0.2, function()
-							self.itemPushProcessing = false
-							if addon.elements.inventorySlots and addon:IsAnyBagVisible() then
-								addon.elements.inventorySlots:UpdateAll()
-							end
-						end)
-					else
-						self.itemPushProcessing = false
-					end
+		if CursorHasItem() then
+			-- An item is being moved
+			if not self.cursorChangingItem then
+				self.cursorChangingItem = true
+				QueueUpdate("CURSOR_CHANGED - item being moved", false)
+				C_Timer.After(UPDATE_DELAY + 0.1, function()
+					self.cursorChangingItem = false
 				end)
 			end
-		end)
+		else
+			-- Item was just placed somewhere
+			if not self.cursorChangedRecently then
+				self.cursorChangedRecently = true
+				QueueUpdate("CURSOR_CHANGED - item placement", false)
+				C_Timer.After(UPDATE_DELAY + 0.1, function()
+					self.cursorChangedRecently = false
+				end)
+			end
+		end
 	end)
-	-- Register BAG_UPDATE_DELAYED after a small delay
-	C_Timer.After(0.2, function()
-		addon:RegisterEvent("BAG_UPDATE_DELAYED", function()
-			if addon.inCombat then return end
+	-- ITEM_PUSH with unified timer
+	addon:RegisterEvent("ITEM_PUSH", function()
+		if addon.inCombat then return end
 
-			-- Throttle updates
-			local now = GetTime()
-			if self.lastBagUpdateTime and (now - self.lastBagUpdateTime < 0.25) then
-				return
-			end
+		if not self.itemPushProcessing then
+			self.itemPushProcessing = true
+			QueueUpdate("ITEM_PUSH event", false)
+			C_Timer.After(UPDATE_DELAY + 0.2, function()
+				self.itemPushProcessing = false
+			end)
+		end
+	end)
+	-- BAG_UPDATE_DELAYED with unified timer and throttling
+	addon:RegisterEvent("BAG_UPDATE_DELAYED", function()
+		if addon.inCombat then return end
 
-			self.lastBagUpdateTime = now
-			if addon:IsAnyBagVisible() then
-				self:Update("BAG_UPDATE_DELAYED event", false)
-			end
-		end)
+		local now = GetTime()
+		if self.lastBagUpdateTime and (now - self.lastBagUpdateTime < 0.25) then
+			return
+		end
+
+		self.lastBagUpdateTime = now
+		if addon:IsAnyBagVisible() then
+			QueueUpdate("BAG_UPDATE_DELAYED event", false)
+		end
 	end)
 end
 
--- HOOKS AND EVENTS --
+-- EVENT REGISTRATION (Selective Re-enable - Remove Likely Culprits)
+function UpdateSystem:RegisterEventHandlers()
+	-- Keep only the essential events that definitely don't cause the 5s issue
+	-- Bank events (these were working fine)
+	addon:RegisterEvent("BANKFRAME_OPENED", function()
+		addon.bankOpen = true
+		QueueUpdate("BANKFRAME_OPENED", false)
+	end)
+	addon:RegisterEvent("BANKFRAME_CLOSED", function()
+		addon.bankOpen = false
+		QueueUpdate("BANKFRAME_CLOSED", false)
+	end)
+	-- BAG_UPDATE with throttling (might be needed for item changes)
+	addon:RegisterEvent("BAG_UPDATE", function(bagID)
+		if addon.inCombat then return end
+
+		-- Throttle BAG_UPDATE events (can fire rapidly during item changes)
+		local now = GetTime()
+		if self.lastBagUpdateEvent and (now - self.lastBagUpdateEvent < 0.3) then
+			return
+		end
+
+		self.lastBagUpdateEvent = now
+		QueueUpdate("BAG_UPDATE: " .. (bagID or "unknown"), false)
+	end)
+	-- DISABLE THE SUSPECTED CULPRITS FOR NOW:
+	-- These are likely triggered by ElvUI's 5-second layout corrections
+	-- addon:RegisterEvent("BAG_UPDATE_COOLDOWN", function()
+	--	if addon.inCombat then return end
+	--	local now = GetTime()
+	--	if self.lastCooldownUpdate and (now - self.lastCooldownUpdate < 0.5) then
+	--		return
+	--	end
+	--	self.lastCooldownUpdate = now
+	--	QueueUpdate("BAG_UPDATE_COOLDOWN", false)
+	-- end)
+	-- addon:RegisterEvent("CURRENCY_DISPLAY_UPDATE", function()
+	--	if addon.inCombat then return end
+	--	local now = GetTime()
+	--	if self.lastCurrencyUpdate and (now - self.lastCurrencyUpdate < 1.0) then
+	--		return
+	--	end
+	--	self.lastCurrencyUpdate = now
+	--	QueueUpdate("CURRENCY_DISPLAY_UPDATE", false)
+	-- end)
+	addon:RegisterForEvent("CURRENCY_DIMENSIONS_UPDATED", function(dimensions)
+		if not addon.inCombat and addon:IsAnyBagVisible() then
+			local now = GetTime()
+			if self.lastCurrencyDimensionsUpdate and (now - self.lastCurrencyDimensionsUpdate < 0.5) then
+				return
+			end
+
+			self.lastCurrencyDimensionsUpdate = now
+			QueueUpdate("CURRENCY_DIMENSIONS_UPDATED", false)
+		end
+	end)
+	-- Keep item lock changes as they're needed for item movement
+	addon:RegisterEvent("ITEM_LOCK_CHANGED", function()
+		if not addon.inCombat then
+			-- Throttle item lock changes (rapid during item movement)
+			local now = GetTime()
+			if self.lastItemLockChange and (now - self.lastItemLockChange < 0.2) then
+				return
+			end
+
+			self.lastItemLockChange = now
+			QueueUpdate("ITEM_LOCK_CHANGED", false)
+		end
+	end)
+	debug("Event handlers registered with suspected culprits disabled")
+end
+
+-- HOOKS SETUP
 function UpdateSystem:SetupHooks()
 	-- Remove any existing hooks first
 	addon:UnhookAll()
-	-- Hook ElvUI's bag module for updates, with combat awareness
+	-- Hook ElvUI's bag module for updates with aggressive layout throttling
 	addon:SecureHook(B, "Layout", function()
-		-- Skip during intense combat or if performance issues detected
+		-- Throttle ALL layout updates more aggressively (ElvUI runs layout corrections every ~5s)
+		local now = GetTime()
+		if self.lastLayoutTrigger and (now - self.lastLayoutTrigger < 2.0) then
+			return -- Skip layout updates if they happened less than 2 seconds ago
+		end
+
+		self.lastLayoutTrigger = now
 		if addon.inCombat then
 			local bagsVisible = addon:IsAnyBagVisible()
-			if not bagsVisible then
-				return -- Skip updates for invisible bags
-			end
+			if not bagsVisible then return end
 
-			-- Throttle updates even if bags are visible
-			local now = GetTime()
 			if self.lastLayoutUpdate and (now - self.lastLayoutUpdate < 0.5) then
 				return
 			end
@@ -215,14 +322,12 @@ function UpdateSystem:SetupHooks()
 			self.lastLayoutUpdate = now
 		end
 
-		self:Update("B:Layout hook", false)
+		QueueUpdate("B:Layout hook", false)
 	end)
-	-- Hook bag open/close with improved combat awareness
+	-- Hook bag open/close
 	addon:RawHook(B, "OpenBags", function(...)
 		addon.hooks[B].OpenBags(...)
-		-- Track that bags are open
 		addon.bagsOpen = true
-		-- Apply updates based on combat state
 		if addon.inCombat then
 			-- Minimal updates during combat
 			C_Timer.After(0.1, function()
@@ -231,21 +336,19 @@ function UpdateSystem:SetupHooks()
 				end
 
 				local background = addon:GetCachedModule("background")
-				if background then
-					-- Direct reference to ElvUI bag frame
-					if B.BagFrame then
-						background:ApplyBackdropStyle(B.BagFrame)
-					end
+				if background and B.BagFrame then
+					background:ApplyBackdropStyle(B.BagFrame)
 				end
 			end)
 		else
-			-- Full update outside combat
-			self:Update("B:OpenBags hook", true)
+			-- Apply borders immediately for bag opening to reduce initial lag
+			debug("B:OpenBags detected - applying borders immediately")
+			UpdateSystem:ExecuteUpdate("B:OpenBags hook (immediate)", true, false)
 			-- Check if this is the first time opening bags
 			if addon.firstTimeOpens.bags then
 				addon.firstTimeOpens.bags = false
 				-- Refresh all borders after initial open
-				C_Timer.After(0.2, function()
+				C_Timer.After(UPDATE_DELAY + 0.1, function()
 					if addon:IsAnyBagVisible() then
 						addon:RefreshAllBorders()
 					end
@@ -253,20 +356,16 @@ function UpdateSystem:SetupHooks()
 			end
 		end
 	end, true)
-	-- Enhanced CloseBags hook with improved memory management
+	-- Enhanced CloseBags hook
 	addon:RawHook(B, "CloseBags", function(...)
-		-- Call original method
 		addon.hooks[B].CloseBags(...)
-		-- Track that bags are closed
 		addon.bagsOpen = false
-		-- Schedule cleanup after a short delay
+		-- Schedule cleanup after bags close
 		C_Timer.After(0.3, function()
-			-- Clean up memory when bags close
 			local ResourceManager = addon:GetCachedModule("resourceManager")
 			if ResourceManager and ResourceManager.CleanupMemory then
 				ResourceManager:CleanupMemory(true)
 			else
-				-- Fallback to core method if ResourceManager isn't available
 				addon:CleanupMemory(true)
 			end
 
@@ -277,22 +376,18 @@ function UpdateSystem:SetupHooks()
 			end
 
 			-- More aggressive resource reclamation
-			local ResourceManager = addon:GetCachedModule("resourceManager")
 			if ResourceManager and ResourceManager.CleanUnusedPoolObjects then
 				ResourceManager:CleanUnusedPoolObjects()
 			else
-				-- Fallback to core method if ResourceManager isn't available
 				addon:CleanUnusedPoolObjects()
 			end
 		end)
 	end, true)
-	-- Hook standard WoW bag functions with combat awareness
+	-- Hook standard WoW bag functions
 	self:HookStandardBagFunctions()
-	-- Hook Warband bank detection
 	self:SetupWarbandBankDetection()
-	-- Track that hooks are initialized
 	addon.hooksInitialized = true
-	debug("All hooks established")
+	debug("All hooks established with unified timing")
 end
 
 -- Hook standard WoW bag functions
@@ -300,23 +395,20 @@ function UpdateSystem:HookStandardBagFunctions()
 	-- Hook OpenBackpack
 	addon:SecureHook("OpenBackpack", function()
 		if addon.inCombat then
-			-- Minimal updates during combat
 			C_Timer.After(0.1, function()
 				if addon.elements.borders then
 					addon.elements.borders:ApplyBordersToAllElements()
 				end
 
 				local background = addon:GetCachedModule("background")
-				if background then
-					-- Direct reference to ElvUI bag frame
-					if B.BagFrame then
-						background:ApplyBackdropStyle(B.BagFrame)
-					end
+				if background and B.BagFrame then
+					background:ApplyBackdropStyle(B.BagFrame)
 				end
 			end)
 		else
-			-- Full update outside combat
-			self:Update("OpenBackpack hook", true)
+			-- Apply borders immediately for bag opening to reduce delay
+			debug("OpenBackpack detected - applying borders immediately")
+			UpdateSystem:ExecuteUpdate("OpenBackpack hook (immediate)", true, false)
 		end
 	end)
 	-- Hook OpenAllBags
@@ -326,175 +418,58 @@ function UpdateSystem:HookStandardBagFunctions()
 				if addon.elements.borders then
 					addon.elements.borders:ApplyBordersToAllElements()
 				end
-
-				local background = addon:GetCachedModule("background")
-				if background and addon:IsAnyBagVisible() then
-					-- Direct reference to ElvUI bag frame
-					if B.BagFrame then
-						background:ApplyBackdropStyle(B.BagFrame)
-					end
-				end
 			end)
 		else
-			self:Update("OpenAllBags hook", true)
+			-- Apply borders immediately for bag opening to reduce delay
+			debug("OpenAllBags detected - applying borders immediately")
+			UpdateSystem:ExecuteUpdate("OpenAllBags hook (immediate)", true, false)
 		end
 	end)
-	-- Hook ToggleAllBags
-	addon:SecureHook("ToggleAllBags", function()
-		if addon.inCombat then
-			C_Timer.After(0.1, function()
-				if addon:IsAnyBagVisible() then
-					if addon.elements.borders then
-						addon.elements.borders:ApplyBordersToAllElements()
-					end
-
-					local background = addon:GetCachedModule("background")
-					if background then
-						-- Direct reference to ElvUI bag frame
-						if B.BagFrame then
-							background:ApplyBackdropStyle(B.BagFrame)
-						end
-					end
-				end
-			end)
-		else
-			self:Update("ToggleAllBags hook", true)
-		end
+	-- Hook CloseAllBags
+	addon:SecureHook("CloseAllBags", function()
+		QueueUpdate("CloseAllBags hook", false)
 	end)
-	-- Hook ElvUI bag assignment with combat awareness
-	if B.AssignBagFunctionality then
-		addon:SecureHook(B, "AssignBagFunctionality", function()
-			if addon.inCombat then
-				return -- Skip during combat
-			end
-
-			C_Timer.After(0.1, function()
-				-- Update slot borders for bag assignments
-				if addon.elements.inventorySlots then
-					addon.elements.inventorySlots:ResetCache()
-					addon.elements.inventorySlots:UpdateAll()
-				end
-			end)
-		end)
-	end
 end
 
--- Set up detection for the warband bank tab
+-- Setup warband bank detection
 function UpdateSystem:SetupWarbandBankDetection()
-	-- Hook the BankFrameTab button clicks to detect warband bank tab
-	for i = 1, 5 do
-		local tab = _G["BankFrameTab" .. i]
-		if tab then
-			tab:HookScript("OnClick", function()
-				local tabText = tab:GetText() or ""
-				if tabText:find("Warband") and addon.firstTimeOpens.warbandBank then
-					addon.firstTimeOpens.warbandBank = false
-					C_Timer.After(0.2, function()
-						if B.BankFrame and B.BankFrame:IsShown() then
-							self:Update("WarbandBankFirstOpen", true)
-						end
-					end)
-				end
-			end)
-		end
-	end
+	if not C_Bank or not C_Bank.FetchDepositedMoney then return end
 
-	debug("Warband bank detection set up")
-end
-
--- Register all event handlers
-function UpdateSystem:RegisterEventHandlers()
-	-- Register bank frame events
 	addon:RegisterEvent("BANKFRAME_OPENED", function()
-		if addon.inCombat then
-			-- Minimal update during combat
-			C_Timer.After(0.1, function()
-				if addon.elements.borders and addon:IsAnyBagVisible() then
-					addon.elements.borders:ApplyBordersToAllElements()
-				end
-			end)
-		else
-			-- Full update
-			self:Update("BANKFRAME_OPENED event", true)
-			-- Check if this is the first time opening the bank
-			if addon.firstTimeOpens.bank then
-				addon.firstTimeOpens.bank = false
-				C_Timer.After(0.2, function()
-					if B.BankFrame and B.BankFrame:IsShown() then
-						addon:RefreshAllBorders()
-					end
-				end)
-			end
+		if addon.firstTimeOpens.warbandBank then
+			addon.firstTimeOpens.warbandBank = false
+			QueueUpdate("WarbandBankFirstOpen", true)
 		end
 	end)
-	-- Handle player entering world - USE A CALLBACK FUNCTION INSTEAD OF METHOD NAME
-	addon:RegisterEvent("PLAYER_ENTERING_WORLD", function()
-		self:OnPlayerEnteringWorld()
-	end)
-	-- Handle addon loading - USE A CALLBACK FUNCTION INSTEAD OF METHOD NAME
-	addon:RegisterEvent("ADDON_LOADED", function(_, addonName)
-		self:OnAddonLoaded(_, addonName)
-	end)
-	-- Combat event handlers
-	addon:RegisterEvent("PLAYER_REGEN_DISABLED", function()
-		self:OptimizeForCombat()
-	end)
-	addon:RegisterEvent("PLAYER_REGEN_ENABLED", function()
-		self:RestoreFromCombat()
-	end)
-	-- Add BAG_CLOSED event for memory cleanup
-	addon:RegisterEvent("BAG_CLOSED", function()
-		-- Schedule cleanup after all bag operations complete
-		C_Timer.After(1, function()
-			if not addon:IsAnyBagVisible() then
-				local ResourceManager = addon:GetCachedModule("resourceManager")
-				if ResourceManager and ResourceManager.CleanupMemory then
-					ResourceManager:CleanupMemory(true)
-				else
-					-- Fallback to core method if ResourceManager isn't available
-					addon:CleanupMemory(true)
-				end
-			end
-		end)
-	end)
-	debug("All event handlers registered")
 end
 
 -- Event handlers
 function UpdateSystem:OnPlayerEnteringWorld()
-	-- Reset first-time opens
 	addon.firstTimeOpens = {
 		bags = true,
 		bank = true,
 		warbandBank = true,
 	}
-	C_Timer.After(1, function()
-		self:Update("PLAYER_ENTERING_WORLD event", true)
-	end)
+	QueueUpdate("PLAYER_ENTERING_WORLD event", true)
 	debug("Player entering world processed")
 end
 
 function UpdateSystem:OnAddonLoaded(_, addonName)
 	if addonName == "BagCustomizer_for_ElvUI" or addonName == "ElvUI" then
-		C_Timer.After(0.5, function()
-			self:Update("ADDON_LOADED event: " .. addonName, true)
-		end)
+		QueueUpdate("ADDON_LOADED event: " .. addonName, true)
 		debug("Addon loaded: " .. addonName)
 	end
 end
 
--- MainTextures.lua helper
 function UpdateSystem:ShouldSkipModuleUpdate()
 	return self.combatSuspended and not addon:IsAnyBagVisible()
 end
 
--- CONSOLIDATED UPDATE SYSTEM --
--- Main update function - the single entry point for all updates
+-- MAIN UPDATE FUNCTION
 function UpdateSystem:Update(reason, immediate)
 	-- Skip if disabled
 	if not E.db.bagCustomizer or not E.db.bagCustomizer.enabled then
 		if not self.disabledCleanupDone then
-			-- Simple cleanup of customizations
 			self:RevertAllCustomizations()
 			self.disabledCleanupDone = true
 		end
@@ -502,129 +477,26 @@ function UpdateSystem:Update(reason, immediate)
 		return
 	end
 
-	-- Skip ALL processing when bags aren't visible (except minimap)
-	local bagsVisible = addon:IsAnyBagVisible()
-	if not bagsVisible then
-		-- Only handle minimap border if needed
-		if E.db.bagCustomizer.borders and
-				E.db.bagCustomizer.borders.enable and
-				E.db.bagCustomizer.borders.elements.minimap then
-			self:ApplyMinimapBorder()
-		end
-
-		return
-	end
-
-	-- Optimized first update check
-	local isFirstUpdate = false
-	if reason then
-		if firstUpdateReasons[reason] then
-			-- Direct lookup is faster than string patterns
-			isFirstUpdate = true
-		elseif reason:find("first") or reason:find("Initial") then
-			-- Fall back to pattern matching only when needed
-			isFirstUpdate = true
-		end
-	end
-
-	-- If first update, pass forceRebuild=true to texture module
-	if addon.elements.mainTextures and isFirstUpdate then
-		-- Force complete texture rebuild on major events
-		if B.BagFrame and B.BagFrame:IsShown() then
-			addon.elements.mainTextures:UpdateFrame(B.BagFrame, true)
-		end
-
-		if B.BankFrame and B.BankFrame:IsShown() then
-			addon.elements.mainTextures:UpdateFrame(B.BankFrame, true)
-		end
-	end
-
-	-- Skip most updates during combat if bags aren't shown
-	if addon.inCombat then
-		if not bagsVisible then
-			debug("Update skipped during combat (bags not visible): " .. (reason or "unknown"))
-			return
-		else
-			-- Even with bags visible, limit update frequency in combat
-			if not immediate and self.lastCombatUpdate and (GetTime() - self.lastCombatUpdate < 0.5) then
-				debug("Update throttled during combat: " .. (reason or "unknown"))
-				return
-			end
-
-			self.lastCombatUpdate = GetTime()
-		end
-	end
-
-	self.disabledCleanupDone = false
-	-- Debug logging
-	debug("Update requested: " .. (reason or "unknown") .. (immediate and " (immediate)" or ""))
-	-- Implement debouncing
-	local now = GetTime()
-	local updateType = reason or "general"
-	self.lastUpdateTimes = self.lastUpdateTimes or {}
-	-- Skip redundant updates of the same type unless forced
-	if not immediate and self.lastUpdateTimes[updateType] and (now - self.lastUpdateTimes[updateType] < 0.3) then
-		debug("Skipping redundant update of type: " .. updateType)
-		return
-	end
-
-	-- Update the timestamp
-	self.lastUpdateTimes[updateType] = now
-	-- Cancel existing timer if it exists
-	if addon.updateTimer then
-		addon.updateTimer:Cancel()
-		addon.updateTimer = nil
-	end
-
-	-- Schedule update based on immediate flag
-	if immediate then
-		-- Do immediate update
-		self:UpdateOpenBags()
-	else
-		-- Schedule delayed update with variable timing based on combat status
-		local delay = addon.inCombat and 0.2 or 0.1
-		addon.updateTimer = C_Timer.NewTimer(delay, function()
-			self:UpdateOpenBags()
-			addon.updateTimer = nil
-		end)
-	end
-
-	-- Notify element update callbacks (but throttle during combat)
-	if addon.elementUpdateCallbacks and (not addon.inCombat or immediate) then
-		for elementName, updateFunc in pairs(addon.elementUpdateCallbacks) do
-			if type(updateFunc) == "function" then
-				-- Use pcall to prevent errors in element update callbacks from breaking the whole update
-				local success, errorMsg = pcall(function()
-					updateFunc(reason, immediate)
-				end)
-				if not success then
-					debug("Error in element update callback for " .. elementName .. ": " .. tostring(errorMsg))
-				end
-			end
-		end
-	end
-
-	-- Trigger update event via event bus
-	addon:TriggerEvent("UPDATE_REQUESTED", reason, immediate)
+	-- Use unified timer system
+	QueueUpdate(reason, immediate)
 end
 
 -- Update only currently open bags - simplified to avoid nested timers
-function UpdateSystem:UpdateOpenBags()
+function UpdateSystem:UpdateOpenBags(isFirstUpdate)
 	-- Skip if in combat and frames still processing
 	if addon.inCombat and self.processingFrames then
 		return
 	end
 
 	self.processingFrames = true
-	-- Sequential updates with a single timer chain
 	-- Update container frame if showing
 	if B.BagFrame and B.BagFrame:IsShown() then
-		self:ExecuteUpdate(B.BagFrame)
+		self:UpdateFrame(B.BagFrame, false, isFirstUpdate)
 	end
 
 	-- Update bank frame if showing
 	if B.BankFrame and B.BankFrame:IsShown() then
-		self:ExecuteUpdate(B.BankFrame)
+		self:UpdateFrame(B.BankFrame, false, isFirstUpdate)
 	end
 
 	-- Handle minimap
@@ -652,29 +524,66 @@ function UpdateSystem:UpdateOpenBags()
 	addon:TriggerEvent("UPDATE_COMPLETE")
 end
 
+-- Execute the actual update (now called from unified system)
+function UpdateSystem:ExecuteUpdate(source, immediate, isFirstUpdate)
+	debug("ExecuteUpdate: " .. (source or "unknown"))
+	if not addon.bagsInitialized and not immediate then return end
+
+	-- Skip updates when ElvUI options are being manipulated
+	if _G.ElvUI_OptionsUI and _G.ElvUI_OptionsUI.OpeningOrClosing then
+		debug("Skipping update while ElvUI options are being modified")
+		return
+	end
+
+	self.disabledCleanupDone = false
+	-- Skip most processing when bags aren't visible (except minimap)
+	local bagsVisible = addon:IsAnyBagVisible()
+	if not bagsVisible then
+		if E.db.bagCustomizer.borders and
+				E.db.bagCustomizer.borders.enable and
+				E.db.bagCustomizer.borders.elements.minimap then
+			self:ApplyMinimapBorder()
+		end
+
+		return
+	end
+
+	-- Skip most updates during combat if bags aren't shown
+	if addon.inCombat then
+		if not bagsVisible then
+			debug("Update skipped during combat (bags not visible): " .. (source or "unknown"))
+			return
+		else
+			-- Even with bags visible, limit update frequency in combat
+			if not immediate and self.lastCombatUpdate and (GetTime() - self.lastCombatUpdate < 0.5) then
+				debug("Update throttled during combat: " .. (source or "unknown"))
+				return
+			end
+
+			self.lastCombatUpdate = GetTime()
+		end
+	end
+
+	-- Trigger update event
+	addon:TriggerEvent("UPDATE_REQUESTED", source, immediate)
+	-- Execute actual update
+	self:UpdateOpenBags(isFirstUpdate)
+end
+
 -- Update a specific frame with all customizations
-function UpdateSystem:ExecuteUpdate(targetFrame)
+function UpdateSystem:UpdateFrame(targetFrame, immediate, isFirstUpdate)
 	-- Skip if in combat and no bag is visible
 	if self:ShouldSkipModuleUpdate() then
-		debug("ExecuteUpdate: Skipping module update due to combat/visibility.") -- Added debug
+		debug("UpdateFrame: Skipping module update due to combat/visibility.")
 		return
 	end
 
 	if not targetFrame then
-		-- This block seems redundant if ExecuteUpdate is always called with a targetFrame
-		-- from UpdateOpenBags. Consider removing or refining if targetFrame can be nil.
-		-- Update each visible frame
-		-- if B.BagFrame and B.BagFrame:IsShown() then
-		-- 	self:ExecuteUpdate(B.BagFrame)
-		-- end
-		-- if B.BankFrame and B.BankFrame:IsShown() then
-		-- 	self:ExecuteUpdate(B.BankFrame)
-		-- end
-		debug("ExecuteUpdate: Called with nil targetFrame, exiting.") -- Added debug
+		debug("UpdateFrame: Called with nil targetFrame, exiting.")
 		return
 	end
 
-	debug("ExecuteUpdate: Starting update for " .. targetFrame:GetName()) -- Added debug
+	debug("UpdateFrame: Starting update for " .. targetFrame:GetName())
 	-- Get currency dimensions if this is a bag frame (not bank)
 	if not addon:IsBankFrame(targetFrame) then
 		local currencyAndTextures = addon:GetCachedModule("currencyAndTextures")
@@ -686,19 +595,17 @@ function UpdateSystem:ExecuteUpdate(targetFrame)
 	-- Step 1: Update frame backgrounds and Textures
 	self:UpdateBackgroundsAndTextures(targetFrame)
 	-- Step 2: Update search bar backdrop (via UpdateSearchAndBorders) AND stack button position
-	self:UpdateSearchAndBorders(targetFrame)  -- This handles search bar backdrop
-	-- <<<< ADD EXPLICIT STACK BUTTON POSITIONING >>>>
-	if not addon:IsBankFrame(targetFrame) then -- Only apply to non-bank frames
+	self:UpdateSearchAndBorders(targetFrame)
+	-- Add explicit stack button positioning
+	if not addon:IsBankFrame(targetFrame) then
 		local searchBarModule = addon:GetCachedModule("searchBar")
 		if searchBarModule and searchBarModule.ApplyStackButtonPosition then
 			searchBarModule:ApplyStackButtonPosition(targetFrame)
-			-- Removed debug from previous attempt as ApplyStackButtonPosition has its own debug now.
 		else
-			debug("ExecuteUpdate: Could not find searchBar module or ApplyStackButtonPosition for " .. targetFrame:GetName())
+			debug("UpdateFrame: Could not find searchBar module or ApplyStackButtonPosition for " .. targetFrame:GetName())
 		end
 	end
 
-	-- <<<< END ADDED CODE >>>>
 	-- Step 3: Update miscellaneous Textures
 	local MiscTextures = addon:GetCachedModule("miscTextures")
 	if MiscTextures then
@@ -709,44 +616,7 @@ function UpdateSystem:ExecuteUpdate(targetFrame)
 	self:UpdateSlots(targetFrame)
 	-- Step 5: Update module layouts (e.g., FrameHeight)
 	self:UpdateAllModuleLayouts()
-	debug("ExecuteUpdate: Finished update for " .. targetFrame:GetName()) -- Added debug
-end
-
--- Legacy convenience functions that all call the main Update function
-function UpdateSystem:DebouncedUpdate(reason, immediate)
-	self:Update(reason, immediate)
-end
-
-function UpdateSystem:ApplyChanges()
-	self:Update("ApplyChanges", true)
-end
-
-function UpdateSystem:ThrottledUpdate()
-	self:Update("ThrottledUpdate", false)
-end
-
-function UpdateSystem:FullUpdate()
-	self:Update("FullUpdate", true)
-end
-
-function UpdateSystem:UpdateLayout()
-	-- Check if layout module exists
-	if addon.elements and addon.elements.layout then
-		addon.elements.layout:UpdateLayout()
-	else
-		-- Log error if layout module is missing
-		debug("Error: Layout module not found!")
-	end
-end
-
--- Update helper
-function UpdateSystem:UpdateAllModuleLayouts()
-	for elementName, element in pairs(addon.elements) do
-		if element.UpdateLayout then
-			debug("Running layout update for: " .. elementName)
-			element:UpdateLayout()
-		end
-	end
+	debug("UpdateFrame: Finished update for " .. targetFrame:GetName())
 end
 
 -- Update backgrounds and Textures for a frame
@@ -832,6 +702,16 @@ function UpdateSystem:UpdateSlots(frame)
 	end
 end
 
+-- Update helper
+function UpdateSystem:UpdateAllModuleLayouts()
+	for elementName, element in pairs(addon.elements) do
+		if element.UpdateLayout then
+			debug("Running layout update for: " .. elementName)
+			element:UpdateLayout()
+		end
+	end
+end
+
 -- Apply minimap border
 function UpdateSystem:ApplyMinimapBorder()
 	if not E.db.bagCustomizer or not E.db.bagCustomizer.enabled or
@@ -872,12 +752,12 @@ function UpdateSystem:ApplyMinimapBorder()
 	end
 end
 
--- CONSOLIDATED REVERT SYSTEM --
+-- CONSOLIDATED REVERT SYSTEM
 -- Revert all customizations back to default
 function UpdateSystem:RevertAllCustomizations()
 	debug("Reverting all customizations")
 	addon:ResetAllResourceCaches()
-	-- IMPORTANT FIX: First, clean up all mask Textures from buttons
+	-- First, clean up all mask Textures from buttons
 	local inventorySlots = addon:GetCachedModule("inventorySlots")
 	if inventorySlots and inventorySlots.processedSlots then
 		for button in pairs(inventorySlots.processedSlots) do
@@ -994,12 +874,11 @@ function UpdateSystem:RevertAllCustomizations()
 	end
 
 	-- Revert slot shape
-	local inventorySlots = addon:GetCachedModule("inventorySlots")
 	if inventorySlots then
 		inventorySlots:RevertAllSlots()
 	end
 
-	-- ADDITIONAL FIX: Clear all texture caches
+	-- Clear all texture caches
 	if inventorySlots then
 		-- Clear button Textures cache
 		if type(inventorySlots.buttonTexturesCache) == "table" then
@@ -1084,6 +963,44 @@ function UpdateSystem:RevertFrameTextures(frame)
 	end
 end
 
+-- Legacy convenience functions that all call the main Update function
+function UpdateSystem:DebouncedUpdate(reason, immediate)
+	self:Update(reason, immediate)
+end
+
+function UpdateSystem:ApplyChanges()
+	self:Update("ApplyChanges", true)
+end
+
+function UpdateSystem:ThrottledUpdate()
+	self:Update("ThrottledUpdate", false)
+end
+
+function UpdateSystem:FullUpdate()
+	self:Update("FullUpdate", true)
+end
+
+function UpdateSystem:UpdateLayout()
+	-- Check if layout module exists
+	if addon.elements and addon.elements.layout then
+		addon.elements.layout:UpdateLayout()
+	else
+		-- Log error if layout module is missing
+		debug("Error: Layout module not found!")
+	end
+end
+
+-- Module registration system
+function UpdateSystem:RegisterModuleUpdate(moduleName, updateFunc)
+	self.moduleUpdates = self.moduleUpdates or {}
+	self.moduleUpdates[moduleName] = updateFunc
+	debug("Registered module update: " .. moduleName)
+end
+
+function UpdateSystem:RegisterEvent(eventName, handler)
+	addon:RegisterForEvent(eventName, handler)
+end
+
 -- Initialize function for UpdateSystem module
 function UpdateSystem:Initialize()
 	debug("Initializing UpdateSystem module")
@@ -1100,3 +1017,8 @@ function UpdateSystem:Initialize()
 	self.initialized = true
 	debug("UpdateSystem module initialized")
 end
+
+-- Initialize early
+UpdateSystem:OnInitialize()
+-- Make sure this module is available to the core addon
+addon.elements.updateSystem = UpdateSystem

@@ -1,3 +1,7 @@
+# 1.0.11 - 2025-09-21
+- Attempted fix for border flicker, it should now be much more stable
+- TOC update
+
 # 1.0.10 - 2025-06-23
 - TOC update
 

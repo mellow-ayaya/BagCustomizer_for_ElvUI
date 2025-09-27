@@ -489,6 +489,7 @@ function MiscBorders:ApplyBorder(frame, elementType)
 		end
 
 		frame._BCZ_borderOverlay:SetFrameLevel(frame:GetFrameLevel() + 5)
+		--frame._BCZ_borderOverlay:SetFrameStrata("MEDIUM")
 		debug("Created new border overlay for " .. elementType)
 	end
 
@@ -566,6 +567,7 @@ function MiscBorders:ApplyBorderToContainer()
 		end
 
 		containerOverlay._BCZ_borderOverlay:SetFrameLevel(containerOverlay:GetFrameLevel() + 5)
+		containerOverlay._BCZ_borderOverlay:SetFrameStrata("MEDIUM")
 		debug("Created new border overlay for container")
 	end
 

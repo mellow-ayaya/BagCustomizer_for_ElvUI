@@ -324,36 +324,6 @@ function module:SetupHooks()
 		end
 	end
 
-	-- Create a frame to track cursor state changes (Keep)
-	if not self.cursorTracker then
-		self.cursorTracker = CreateFrame("Frame")
-		self.cursorTracker.elapsed = 0
-		self.cursorTracker:SetScript("OnUpdate", function(_, elapsed)
-			if not self:IsModuleEnabled() then return end
-
-			self.cursorTracker.elapsed = self.cursorTracker.elapsed + elapsed
-			if self.cursorTracker.elapsed < 0.05 then return end
-
-			self.cursorTracker.elapsed = 0
-			local hasItem = CursorHasItem()
-			if hasItem and not self.cursorHasItem then
-				self.cursorHasItem = true
-				module.lastBagActivity = GetTime()
-				if CONFIG.USE_FUNCTION_REPLACEMENT then self:ProtectAllBindTexts() end
-			elseif not hasItem and self.cursorHasItem then
-				self.cursorHasItem = nil
-				module.lastBagActivity = GetTime()
-				self.activeBagID = nil
-				if not module.isSorting then
-					debug("Cursor item dropped - scheduling update sequence")
-					self:ScheduleUpdateSequence()
-				else
-					debug("Cursor item dropped during sort - deferring update to post-sort sequence")
-				end
-			end
-		end)
-	end
-
 	self.hooksSet = true -- Mark hooks as set
 	debug("Hooks setup complete for bindText module (v6)")
 end

@@ -172,9 +172,38 @@ function UpdateSystem:RestoreFromCombat()
 	addon:TriggerEvent("COMBAT_ENDED")
 end
 
+function UpdateSystem:UpdateItemModules(reason)
+	debug("UpdateItemModules called: " .. reason)
+	-- Update inventory slots
+	local inventorySlots = addon:GetCachedModule("inventorySlots")
+	if inventorySlots and inventorySlots.UpdateAll then
+		inventorySlots:UpdateAll()
+	end
+
+	-- Update bind text
+	local bindText = addon:GetCachedModule("bindText")
+	if bindText and bindText.ScheduleUpdateSequence then
+		bindText:ScheduleUpdateSequence()
+	end
+
+	-- Search bar - if items are filtered/highlighted during searches
+	local searchBar = addon:GetCachedModule("searchBar")
+	if searchBar and searchBar.UpdateHighlights then
+		searchBar:UpdateHighlights()
+	end
+
+	-- Resource manager - cleanup textures when items change to prevent memory leaks
+	local resourceManager = addon:GetCachedModule("resourceManager")
+	if resourceManager and resourceManager.CleanupSlotTextures then
+		resourceManager:CleanupSlotTextures()
+	end
+
+	debug("Item modules updated: " .. reason)
+end
+
 -- Register combat events with unified timing
 function UpdateSystem:RegisterCombatEvents()
-	-- CURSOR_CHANGED with unified timer
+	-- CURSOR_CHANGED with selective updates - no frame border rebuilds
 	addon:RegisterEvent("CURSOR_CHANGED", function()
 		if addon.inCombat then return end
 
@@ -182,7 +211,8 @@ function UpdateSystem:RegisterCombatEvents()
 			-- An item is being moved
 			if not self.cursorChangingItem then
 				self.cursorChangingItem = true
-				QueueUpdate("CURSOR_CHANGED - item being moved", false)
+				-- Only update item modules, NOT frame borders
+				self:UpdateItemModules("CURSOR_CHANGED - item being moved")
 				C_Timer.After(UPDATE_DELAY + 0.1, function()
 					self.cursorChangingItem = false
 				end)
@@ -191,26 +221,28 @@ function UpdateSystem:RegisterCombatEvents()
 			-- Item was just placed somewhere
 			if not self.cursorChangedRecently then
 				self.cursorChangedRecently = true
-				QueueUpdate("CURSOR_CHANGED - item placement", false)
+				-- Only update item modules, NOT frame borders
+				self:UpdateItemModules("CURSOR_CHANGED - item placement")
 				C_Timer.After(UPDATE_DELAY + 0.1, function()
 					self.cursorChangedRecently = false
 				end)
 			end
 		end
 	end)
-	-- ITEM_PUSH with unified timer
+	-- ITEM_PUSH with selective updates
 	addon:RegisterEvent("ITEM_PUSH", function()
 		if addon.inCombat then return end
 
 		if not self.itemPushProcessing then
 			self.itemPushProcessing = true
-			QueueUpdate("ITEM_PUSH event", false)
+			-- Only update item modules, NOT frame borders
+			self:UpdateItemModules("ITEM_PUSH event")
 			C_Timer.After(UPDATE_DELAY + 0.2, function()
 				self.itemPushProcessing = false
 			end)
 		end
 	end)
-	-- BAG_UPDATE_DELAYED with unified timer and throttling
+	-- BAG_UPDATE_DELAYED with selective updates
 	addon:RegisterEvent("BAG_UPDATE_DELAYED", function()
 		if addon.inCombat then return end
 
@@ -221,7 +253,8 @@ function UpdateSystem:RegisterCombatEvents()
 
 		self.lastBagUpdateTime = now
 		if addon:IsAnyBagVisible() then
-			QueueUpdate("BAG_UPDATE_DELAYED event", false)
+			-- Only update item modules, NOT frame borders
+			self:UpdateItemModules("BAG_UPDATE_DELAYED event")
 		end
 	end)
 end
@@ -232,13 +265,13 @@ function UpdateSystem:RegisterEventHandlers()
 	-- Bank events (these were working fine)
 	addon:RegisterEvent("BANKFRAME_OPENED", function()
 		addon.bankOpen = true
-		QueueUpdate("BANKFRAME_OPENED", false)
+		QueueUpdate("BANKFRAME_OPENED", false) -- Frame change - keep QueueUpdate
 	end)
 	addon:RegisterEvent("BANKFRAME_CLOSED", function()
 		addon.bankOpen = false
-		QueueUpdate("BANKFRAME_CLOSED", false)
+		QueueUpdate("BANKFRAME_CLOSED", false) -- Frame change - keep QueueUpdate
 	end)
-	-- BAG_UPDATE with throttling (might be needed for item changes)
+	-- BAG_UPDATE with throttling (changed to selective updates)
 	addon:RegisterEvent("BAG_UPDATE", function(bagID)
 		if addon.inCombat then return end
 
@@ -249,10 +282,10 @@ function UpdateSystem:RegisterEventHandlers()
 		end
 
 		self.lastBagUpdateEvent = now
-		QueueUpdate("BAG_UPDATE: " .. (bagID or "unknown"), false)
+		-- CHANGED: Use selective updates instead of QueueUpdate
+		self:UpdateItemModules("BAG_UPDATE: " .. (bagID or "unknown"))
 	end)
-	-- DISABLE THE SUSPECTED CULPRITS FOR NOW:
-	-- These are likely triggered by ElvUI's 5-second layout corrections
+	-- KEEP THESE COMMENTED OUT (your disabled events):
 	-- addon:RegisterEvent("BAG_UPDATE_COOLDOWN", function()
 	--	if addon.inCombat then return end
 	--	local now = GetTime()
@@ -279,10 +312,10 @@ function UpdateSystem:RegisterEventHandlers()
 			end
 
 			self.lastCurrencyDimensionsUpdate = now
-			QueueUpdate("CURRENCY_DIMENSIONS_UPDATED", false)
+			QueueUpdate("CURRENCY_DIMENSIONS_UPDATED", false) -- Frame layout change - keep QueueUpdate
 		end
 	end)
-	-- Keep item lock changes as they're needed for item movement
+	-- Keep item lock changes as they're needed for item movement (changed to selective updates)
 	addon:RegisterEvent("ITEM_LOCK_CHANGED", function()
 		if not addon.inCombat then
 			-- Throttle item lock changes (rapid during item movement)
@@ -292,10 +325,11 @@ function UpdateSystem:RegisterEventHandlers()
 			end
 
 			self.lastItemLockChange = now
-			QueueUpdate("ITEM_LOCK_CHANGED", false)
+			-- CHANGED: Use selective updates instead of QueueUpdate
+			self:UpdateItemModules("ITEM_LOCK_CHANGED")
 		end
 	end)
-	debug("Event handlers registered with suspected culprits disabled")
+	debug("Event handlers registered with selective item updates")
 end
 
 -- HOOKS SETUP

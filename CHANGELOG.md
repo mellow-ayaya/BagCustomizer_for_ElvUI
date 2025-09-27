@@ -1,3 +1,7 @@
+# 1.0.13 - 2025-09-27
+- Fixed bag border flicker (hopefully permanently)
+- Lowered bag border strata to Medium since it was covering part of the equipped bags UI
+
 # 1.0.12 - 2025-09-27
 - Updated for ElvUI 14.00 compatibility
 

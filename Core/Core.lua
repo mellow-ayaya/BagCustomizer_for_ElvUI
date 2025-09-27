@@ -412,6 +412,15 @@ function addon:SetupHooks()
 			self:Update("CloseAllBags")
 		end
 	end)
+	-- Additional hook for bag frame hiding
+	if B.BagFrame then
+		B.BagFrame:HookScript("OnHide", function()
+			if not self.inCombat then
+				self:Update("BagFrameHide")
+			end
+		end)
+	end
+
 	self.hooksInitialized = true
 	debug("All hooks established")
 end

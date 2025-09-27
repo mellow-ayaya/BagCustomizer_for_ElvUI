@@ -1,3 +1,6 @@
+# 1.0.12 - 2025-09-27
+- Updated for ElvUI 14.00 compatibility
+
 # 1.0.11 - 2025-09-21
 - Attempted fix for border flicker, it should now be much more stable
 - TOC update

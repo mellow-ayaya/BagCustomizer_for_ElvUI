@@ -1060,8 +1060,8 @@ function MainTextures:Initialize()
 			end
 		end)
 		-- Hook bag closing for cleanup if updateSystem isn't available
-		if B.CloseBags then
-			hooksecurefunc(B, "CloseBags", function()
+		if B.BagFrame then
+			B.BagFrame:HookScript("OnHide", function()
 				C_Timer.After(0.3, function()
 					if not addon:IsAnyBagVisible() then
 						self:ClearUnusedTextureCache()

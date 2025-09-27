@@ -325,6 +325,39 @@ function UpdateSystem:SetupHooks()
 		QueueUpdate("B:Layout hook", false)
 	end)
 	-- Hook bag open/close
+	if B.OpenBags then
+		hooksecurefunc(B, "OpenBags", function()
+			addon.bagsOpen = true
+			if addon.inCombat then
+				-- Minimal updates during combat
+				C_Timer.After(0.1, function()
+					if addon.elements.borders then
+						addon.elements.borders:ApplyBordersToAllElements()
+					end
+
+					local background = addon:GetCachedModule("background")
+					if background and B.BagFrame then
+						background:ApplyBackdropStyle(B.BagFrame)
+					end
+				end)
+			else
+				-- Apply borders immediately for bag opening to reduce initial lag
+				debug("B:OpenBags detected - applying borders immediately")
+				UpdateSystem:ExecuteUpdate("B:OpenBags hook (immediate)", true, false)
+				-- Check if this is the first time opening bags
+				if addon.firstTimeOpens.bags then
+					addon.firstTimeOpens.bags = false
+					-- Refresh all borders after initial open
+					C_Timer.After(UPDATE_DELAY + 0.1, function()
+						if addon:IsAnyBagVisible() then
+							addon:RefreshAllBorders()
+						end
+					end)
+				end
+			end
+		end)
+	end
+
 	addon:RawHook(B, "OpenBags", function(...)
 		addon.hooks[B].OpenBags(...)
 		addon.bagsOpen = true
@@ -356,33 +389,35 @@ function UpdateSystem:SetupHooks()
 			end
 		end
 	end, true)
-	-- Enhanced CloseBags hook
-	addon:RawHook(B, "CloseBags", function(...)
-		addon.hooks[B].CloseBags(...)
-		addon.bagsOpen = false
-		-- Schedule cleanup after bags close
-		C_Timer.After(0.3, function()
-			local ResourceManager = addon:GetCachedModule("resourceManager")
-			if ResourceManager and ResourceManager.CleanupMemory then
-				ResourceManager:CleanupMemory(true)
-			else
-				addon:CleanupMemory(true)
-			end
+	-- Enhanced bag close detection
+	if B.BagFrame then
+		B.BagFrame:HookScript("OnHide", function()
+			addon.bagsOpen = false
+			-- Schedule cleanup after bags close
+			C_Timer.After(0.3, function()
+				local ResourceManager = addon:GetCachedModule("resourceManager")
+				if ResourceManager and ResourceManager.CleanupMemory then
+					ResourceManager:CleanupMemory(true)
+				else
+					addon:CleanupMemory(true)
+				end
 
-			-- Additional cleanup for texture caches
-			local MainTextures = addon:GetCachedModule("mainTextures")
-			if MainTextures and MainTextures.ClearUnusedTextureCache then
-				MainTextures:ClearUnusedTextureCache()
-			end
+				-- Additional cleanup for texture caches
+				local MainTextures = addon:GetCachedModule("mainTextures")
+				if MainTextures and MainTextures.ClearUnusedTextureCache then
+					MainTextures:ClearUnusedTextureCache()
+				end
 
-			-- More aggressive resource reclamation
-			if ResourceManager and ResourceManager.CleanUnusedPoolObjects then
-				ResourceManager:CleanUnusedPoolObjects()
-			else
-				addon:CleanUnusedPoolObjects()
-			end
+				-- More aggressive resource reclamation
+				if ResourceManager and ResourceManager.CleanUnusedPoolObjects then
+					ResourceManager:CleanUnusedPoolObjects()
+				else
+					addon:CleanUnusedPoolObjects()
+				end
+			end)
 		end)
-	end, true)
+	end
+
 	-- Hook standard WoW bag functions
 	self:HookStandardBagFunctions()
 	self:SetupWarbandBankDetection()

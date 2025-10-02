@@ -14,6 +14,7 @@ MiscBorders.backdropCache = {}
 MiscBorders.containerBorderApplied = false
 MiscBorders.containerOverlay = nil
 MiscBorders.updateLock = false
+MiscBorders.firstOpenPending = true
 -- Simplified debug function
 local function debug(msg)
 	-- Defensive check
@@ -510,13 +511,10 @@ end
 
 function MiscBorders:ApplyBorderToContainer()
 	local containerOverlay = self.containerOverlay
+
 	-- Validate container overlay
 	if not containerOverlay then
 		debug("No container overlay available")
-		if addon.TriggerEvent then
-			addon:TriggerEvent("REQUEST_CONTAINER_OVERLAY")
-		end
-
 		return
 	end
 
@@ -526,14 +524,17 @@ function MiscBorders:ApplyBorderToContainer()
 		return
 	end
 
-	-- Skip if already applied
-	if self.containerBorderApplied and containerOverlay._BCZ_borderApplied then
+	-- SIMPLIFIED: Only skip if border overlay exists and is already visible
+	if containerOverlay._BCZ_borderOverlay and containerOverlay._BCZ_borderOverlay:IsShown() then
+		debug("Container border already visible")
 		return
 	end
 
 	debug("Applying border to container overlay")
+
 	-- Hide individual borders
 	self:HideIndividualFrameBorders()
+
 	-- Verify settings
 	if not self:ShouldUseContainerBorder() then
 		debug("Container border should not be used based on settings")
@@ -547,17 +548,18 @@ function MiscBorders:ApplyBorderToContainer()
 	end
 
 	local borderSettings = E.db.bagCustomizer.borders
+
 	-- Skip if disabled
 	if borderSettings.elements and borderSettings.elements.mainFrame == false then
-		debug("Container border not shown because mainFrame borders are disabled")
+		debug("Container border disabled in settings")
 		if containerOverlay._BCZ_borderOverlay then
 			containerOverlay._BCZ_borderOverlay:Hide()
 		end
-
 		return
 	end
 
 	local settings = borderSettings.mainFrame
+
 	-- Create overlay if needed
 	if not containerOverlay._BCZ_borderOverlay then
 		if BackdropTemplateMixin then
@@ -565,7 +567,6 @@ function MiscBorders:ApplyBorderToContainer()
 		else
 			containerOverlay._BCZ_borderOverlay = CreateFrame("Frame", nil, containerOverlay)
 		end
-
 		containerOverlay._BCZ_borderOverlay:SetFrameLevel(containerOverlay:GetFrameLevel() + 5)
 		containerOverlay._BCZ_borderOverlay:SetFrameStrata("MEDIUM")
 		debug("Created new border overlay for container")
@@ -576,39 +577,30 @@ function MiscBorders:ApplyBorderToContainer()
 	containerOverlay._BCZ_borderOverlay:SetPoint("TOPLEFT", containerOverlay, "TOPLEFT", -settings.inset, settings.inset)
 	containerOverlay._BCZ_borderOverlay:SetPoint("BOTTOMRIGHT", containerOverlay, "BOTTOMRIGHT", settings.inset,
 		-settings.inset)
+
 	-- Apply border style
 	local borderStyle = settings.style or "tooltip"
 	if borderStyle == "thin" then
 		self:ApplyThinBorder(containerOverlay, settings)
-		debug("Applied thin border to container")
 	else
 		local backdrop = self:GetBackdropForStyle(borderStyle, settings)
 		if backdrop and containerOverlay._BCZ_borderOverlay.SetBackdrop then
 			containerOverlay._BCZ_borderOverlay:SetBackdrop(backdrop)
-			containerOverlay._BCZ_borderOverlay:SetBackdropColor(0, 0, 0, 0) -- Transparent background
-			-- Set border color
+			containerOverlay._BCZ_borderOverlay:SetBackdropColor(0, 0, 0, 0)
+
 			local r = settings.color and settings.color.r or (borderSettings.color and borderSettings.color.r) or 1
 			local g = settings.color and settings.color.g or (borderSettings.color and borderSettings.color.g) or 1
 			local b = settings.color and settings.color.b or (borderSettings.color and borderSettings.color.b) or 1
-			local a = 1
+
 			if containerOverlay._BCZ_borderOverlay.SetBackdropBorderColor then
-				containerOverlay._BCZ_borderOverlay:SetBackdropBorderColor(r, g, b, a)
-				debug("Set container backdrop border color: " .. r .. ", " .. g .. ", " .. b)
+				containerOverlay._BCZ_borderOverlay:SetBackdropBorderColor(r, g, b, 1)
 			end
 		end
-
-		debug("Applied " .. borderStyle .. " border to container")
 	end
 
+	-- Show the border
 	containerOverlay._BCZ_borderOverlay:Show()
 	debug("Border overlay shown for container")
-	-- Mark as applied
-	containerOverlay._BCZ_borderApplied = true
-	self.containerBorderApplied = true
-	-- Notify
-	if addon.TriggerEvent then
-		addon:TriggerEvent("BORDERS_APPLIED_TO_CONTAINER", containerOverlay)
-	end
 end
 
 function MiscBorders:HideIndividualFrameBorders()
@@ -629,8 +621,8 @@ function MiscBorders:ApplyBordersToAllElements()
 	if now - self.lastBorderUpdate < 0.1 then
 		return
 	end
-
 	self.lastBorderUpdate = now
+
 	-- Skip if addon is disabled
 	if not E.db or not E.db.bagCustomizer or not E.db.bagCustomizer.enabled then
 		self:RevertAllBorders()
@@ -651,54 +643,65 @@ function MiscBorders:ApplyBordersToAllElements()
 		return
 	end
 
-	-- Apply default border handling first for all cases
+	-- SIMPLE FIRST-OPEN FIX: If this is the first open and bags are visible, delay
+	if self.firstOpenPending and containerFrame:IsShown() then
+		debug("First bag open detected - delaying border application by 0.6s")
+		self.firstOpenPending = false
+
+		C_Timer.After(0.6, function()
+			if containerFrame:IsShown() then
+				debug("First open delay complete - applying borders now")
+				self:ApplyBordersToAllElements()
+			end
+		end)
+		return
+	end
+
+	-- Normal application for subsequent opens (works perfectly)
+	debug("Applying borders (subsequent open or post-delay)")
+
+	-- Apply default border handling
 	self:HandleDefaultBorders(containerFrame, E.db.bagCustomizer.hideDefaultBorders)
+
 	-- Apply container overlay border if applicable
 	if self:ShouldUseContainerBorder() then
 		self:HideIndividualFrameBorders()
-		-- Prevent recursion
-		local lastBorderApplied = self.containerBorderApplied
 		self:ApplyBorderToContainer()
-		-- If container overlay border applied or was applied before, only handle buttons and search box
-		if self.containerBorderApplied or lastBorderApplied then
-			local searchBox = self:GetSearchBox(containerFrame)
-			if searchBox then
-				self:ApplyBorder(searchBox, "searchBar")
-			end
 
-			-- Apply to buttons
-			local buttons = {
-				{ frame = containerFrame.vendorGraysButton, type = "vendorGrays" },
-				{ frame = containerFrame.bagsButton, type = "toggleBars" },
-				{ frame = containerFrame.sortButton, type = "cleanup" },
-				{ frame = containerFrame.stackButton, type = "stack" },
-			}
-			for _, button in ipairs(buttons) do
-				if button.frame and not self:IsBankFrame(button.frame) then
-					self:ApplyBorder(button.frame, button.type)
-				end
-			end
-
-			return
+		-- Apply to buttons and search box
+		local searchBox = self:GetSearchBox(containerFrame)
+		if searchBox then
+			self:ApplyBorder(searchBox, "searchBar")
 		end
+
+		local buttons = {
+			{ frame = containerFrame.vendorGraysButton, type = "vendorGrays" },
+			{ frame = containerFrame.bagsButton,        type = "toggleBars" },
+			{ frame = containerFrame.sortButton,        type = "cleanup" },
+			{ frame = containerFrame.stackButton,       type = "stack" },
+		}
+		for _, button in ipairs(buttons) do
+			if button.frame and not self:IsBankFrame(button.frame) then
+				self:ApplyBorder(button.frame, button.type)
+			end
+		end
+		return
 	end
 
 	-- Fallback: Apply individual borders
 	debug("Applying individual borders (container border not being used)")
-	-- Apply main frame border
 	self:ApplyBorder(containerFrame, "mainFrame")
-	-- Apply search bar border
+
 	local searchBox = self:GetSearchBox(containerFrame)
 	if searchBox then
 		self:ApplyBorder(searchBox, "searchBar")
 	end
 
-	-- Apply button borders
 	local buttons = {
 		{ frame = containerFrame.vendorGraysButton, type = "vendorGrays" },
-		{ frame = containerFrame.bagsButton, type = "toggleBars" },
-		{ frame = containerFrame.sortButton, type = "cleanup" },
-		{ frame = containerFrame.stackButton, type = "stack" },
+		{ frame = containerFrame.bagsButton,        type = "toggleBars" },
+		{ frame = containerFrame.sortButton,        type = "cleanup" },
+		{ frame = containerFrame.stackButton,       type = "stack" },
 	}
 	for _, button in ipairs(buttons) do
 		if button.frame and not self:IsBankFrame(button.frame) then
@@ -706,9 +709,6 @@ function MiscBorders:ApplyBordersToAllElements()
 		end
 	end
 
-	-- Gentle frame update
-	containerFrame:SetAlpha(0.99)
-	C_Timer.After(0.1, function() containerFrame:SetAlpha(1) end)
 	-- Trigger event
 	if addon.TriggerEvent then
 		addon:TriggerEvent("BORDERS_APPLIED_TO_ELEMENTS")

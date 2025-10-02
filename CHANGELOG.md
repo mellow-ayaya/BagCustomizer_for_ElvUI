@@ -1,3 +1,7 @@
+# 1.2.00 - 2025-10-02
+- Fixed bag border flicker when opening the bag for the first time after logging in/reload
+- Adjusted version numbering so that it no longer incorrectly tirggers ElvUI version check
+
 # 1.0.13 - 2025-09-27
 - Fixed bag border flicker (hopefully permanently)
 - Lowered bag border strata to Medium since it was covering part of the equipped bags UI

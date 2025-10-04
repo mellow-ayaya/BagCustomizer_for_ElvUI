@@ -595,7 +595,8 @@ end
 
 -- Execute the actual update (now called from unified system)
 function UpdateSystem:ExecuteUpdate(source, immediate, isFirstUpdate)
-	debug("ExecuteUpdate: " .. (source or "unknown"))
+	debug("ExecuteUpdate: " ..
+		(type(source) == "table" and (source:GetName() or tostring(source)) or tostring(source or "unknown")))
 	if not addon.bagsInitialized and not immediate then return end
 
 	-- Skip updates when ElvUI options are being manipulated

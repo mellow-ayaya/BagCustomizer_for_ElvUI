@@ -4,6 +4,8 @@ Make your ElvUI bags look like the default WoW bags - or create your own awesome
 
 ![image4](https://media.forgecdn.net/attachments/1154/707/4.jpg "")
 
+## This addon is no longer actively maintained. I will update the TOC but no support will be provided. Please make your own fork if needed.
+
 ### About
 
 Do you love the ElvUI bags functionality but would prefer the bags to look more like the default ones, or just be more customizable overall?
